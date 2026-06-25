@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+        <PackageReference Include="MediatR" />
+    </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\MeetMindAI.Domain\MeetMindAI.Domain\MeetMindAI.Domain.csproj" />
+    <ProjectReference Include="..\..\MeetMindAI.Shared\MeetMindAI.Shared\MeetMindAI.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

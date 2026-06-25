@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\MeetMindAI.Application\MeetMindAI.Application\MeetMindAI.Application.csproj" />
+    <ProjectReference Include="..\..\MeetMindAI.Domain\MeetMindAI.Domain\MeetMindAI.Domain.csproj" />
+    <ProjectReference Include="..\..\MeetMindAI.Shared\MeetMindAI.Shared\MeetMindAI.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
