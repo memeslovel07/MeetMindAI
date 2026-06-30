@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MeetMindAI.Shared.Results;
-internal class ResultT
+namespace MeetMindAI.Domain.Enums;
+internal class UserRole
 {
 }

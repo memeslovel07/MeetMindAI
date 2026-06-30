@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MeetMindAI.Domain.Common;
-public class SoftDeletableEntity
+namespace MeetMindAI.Shared.Results;
+public class Result<T>
 {
 }

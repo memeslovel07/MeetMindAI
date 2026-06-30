@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MeetMindAI.Domain.Common;
-public class SoftDeletableEntity
+public abstract class AggregateRoot : SoftDeletableEntity
 {
 }
+

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MeetMindAI.Domain.Common;
-public class SoftDeletableEntity
+namespace MeetMindAI.Domain.Entities.User;
+internal class Notification
 {
 }
