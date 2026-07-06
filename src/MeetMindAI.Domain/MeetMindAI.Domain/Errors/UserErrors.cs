@@ -64,4 +64,14 @@ public static class UserErrors
    "User.NormalizedEmailTooLong",
    "Normalized email exceeds the maximum allowed length.");
 
+    public static readonly Error AvatarUrlTooLong =
+    new(
+        "User.AvatarUrlTooLong",
+        "Avatar URL exceeds the maximum allowed length.");
+
+    public static readonly Error EmailAlreadyConfirmed =
+    new(
+        "User.EmailAlreadyConfirmed",
+        "The user's email has already been confirmed.");
+
 }

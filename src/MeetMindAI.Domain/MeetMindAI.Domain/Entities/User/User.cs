@@ -122,6 +122,9 @@ public sealed class User : AggregateRoot
         string lastName)
     {
         var normalizedEmail = email.Trim().ToUpperInvariant();
+        email = email.Trim();
+        firstName = firstName.Trim();
+        lastName = lastName.Trim();
 
         var validationResult = Validate(
             email,
@@ -206,5 +209,132 @@ public sealed class User : AggregateRoot
         return Result.Success();
 
     }
+
+    /// <summary>
+    /// Updates the user's profile information.
+    /// </summary>
+    /// <param name="firstName">The new first name.</param>
+    /// <param name="lastName">The new last name.</param>
+    /// <param name="avatarUrl">The new avatar URL.</param>
+    /// <returns>
+    /// A successful result if the profile was updated; otherwise, a failure result.
+    /// </returns>
+    public Result UpdateProfile(
+        string firstName,
+        string lastName,
+        string? avatarUrl)
+    {
+        firstName = firstName.Trim();
+        lastName = lastName.Trim();
+        avatarUrl = string.IsNullOrWhiteSpace(avatarUrl)
+            ? null
+            : avatarUrl.Trim();
+
+        var validationResult = ValidateProfile(
+            firstName,
+            lastName,
+            avatarUrl);
+
+        if (validationResult.IsFailure)
+        {
+            return validationResult;
+        }
+
+        FirstName = firstName;
+        LastName = lastName;
+        AvatarUrl = avatarUrl;
+
+        return Result.Success();
+    }
+
+    private static Result ValidateProfile(
+    string firstName,
+    string lastName,
+    string? avatarUrl)
+    {
+        if (string.IsNullOrWhiteSpace(firstName))
+        {
+            return Result.Failure(UserErrors.FirstNameRequired);
+        }
+
+        if (string.IsNullOrWhiteSpace(lastName))
+        {
+            return Result.Failure(UserErrors.LastNameRequired);
+        }
+
+        if (firstName.Length > ValidationConstants.FirstNameMaxLength)
+        {
+            return Result.Failure(UserErrors.FirstNameTooLong);
+        }
+
+        if (lastName.Length > ValidationConstants.LastNameMaxLength)
+        {
+            return Result.Failure(UserErrors.LastNameTooLong);
+        }
+
+        if (!string.IsNullOrWhiteSpace(avatarUrl) &&
+            avatarUrl.Length > ValidationConstants.AvatarUrlMaxLength)
+        {
+            return Result.Failure(UserErrors.AvatarUrlTooLong);
+        }
+
+        return Result.Success();
+    }
+
+    public Result ChangePassword(string passwordHash)
+    {
+        passwordHash = passwordHash.Trim();
+
+        var validation = ValidatePasswordHash(passwordHash);
+
+        if (validation.IsFailure)
+        {
+            return validation;
+        }
+
+        PasswordHash = passwordHash;
+
+        return Result.Success();
+    }
+
+    private static Result ValidatePasswordHash(
+    string passwordHash)
+    {
+        if (string.IsNullOrWhiteSpace(passwordHash))
+        {
+            return Result.Failure(
+                UserErrors.PasswordHashRequired);
+        }
+
+        if (passwordHash.Length >
+            ValidationConstants.PasswordHashMaxLength)
+        {
+            return Result.Failure(
+                UserErrors.PasswordHashTooLong);
+        }
+
+        return Result.Success();
+    }
+
+    /// <summary>
+    /// Confirms the user's email address.
+    /// </summary>
+    public Result ConfirmEmail()
+    {
+        if (EmailConfirmed)
+        {
+            return Result.Failure(UserErrors.EmailAlreadyConfirmed);
+        }
+
+        EmailConfirmed = true;
+
+        return Result.Success();
+    }
+
+    public void UpdateLastLogin(DateTime utcNow)
+    {
+        LastLoginAtUtc = utcNow;
+    }
+
 }
 
