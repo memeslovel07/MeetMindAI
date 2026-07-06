@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\MeetMindAI.Shared\MeetMindAI.Shared\MeetMindAI.Shared.csproj" />
+  </ItemGroup>
+
+    
 </Project>
