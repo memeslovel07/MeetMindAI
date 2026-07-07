@@ -5,6 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MeetMindAI.Domain.Common;
-public class SoftDeletableEntity
+
+/// <summary>
+/// Represents an entity that supports soft deletion.
+/// </summary>
+public abstract class SoftDeletableEntity
+    : AuditableEntity, ISoftDeletable
 {
+    /// <inheritdoc/>
+    public bool IsDeleted { get; set; }
+
+    /// <inheritdoc/>
+    public DateTime? DeletedAtUtc { get; set; }
+
+    /// <inheritdoc/>
+    public Guid? DeletedBy { get; set; }
 }
