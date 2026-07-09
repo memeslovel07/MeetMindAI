@@ -50,7 +50,7 @@ public sealed class Result<T> : Result
     /// <summary>
     /// Creates a failed result.
     /// </summary>
-    public new static Result<T> Failure(Error error)
+    public static new Result<T> Failure(Error error)
     {
         ArgumentNullException.ThrowIfNull(error);
 

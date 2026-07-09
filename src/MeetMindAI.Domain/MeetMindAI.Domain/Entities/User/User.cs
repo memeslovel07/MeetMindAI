@@ -115,8 +115,9 @@ public sealed class User : AggregateRoot
         string firstName,
         string lastName)
     {
-        var normalizedEmail = email.Trim().ToUpperInvariant();
         email = email.Trim();
+
+        var normalizedEmail = email.ToUpperInvariant();
         firstName = firstName.Trim();
         lastName = lastName.Trim();
 
