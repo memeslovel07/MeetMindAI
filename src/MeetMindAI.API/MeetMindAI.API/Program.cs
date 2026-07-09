@@ -1,3 +1,4 @@
+using MeetMindAI.API.Middleware;
 using MeetMindAI.Application;
 using MeetMindAI.Infrastructure;
 using MeetMindAI.Persistence;
@@ -68,6 +69,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseAuthentication();
 

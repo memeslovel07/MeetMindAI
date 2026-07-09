@@ -1,5 +1,6 @@
 using MeetMindAI.API.Contracts.Authentication;
 using MeetMindAI.Application.Authentication.Register;
+using MeetMindAI.Application.Authentication.Login;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -54,6 +55,34 @@ public sealed class AuthController : ControllerBase
         return Created(
             $"/api/users/{result.Value.UserId}",
             result.Value);
+    }
+
+    /// <summary>
+    /// Authenticates a user.
+    /// </summary>
+    [HttpPost("login")]
+    [ProducesResponseType(typeof(LoginUserResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Login(
+        LoginRequest request,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        var command = new LoginUserCommand(
+            request.Email,
+            request.Password);
+
+        var result = await _sender.Send(
+            command,
+            cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return BadRequest(result.Error);
+        }
+
+        return Ok(result.Value);
     }
 
 }

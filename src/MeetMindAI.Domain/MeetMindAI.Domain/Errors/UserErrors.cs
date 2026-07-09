@@ -72,4 +72,12 @@ public static class UserErrors
         "User.EmailAlreadyExists",
         "The user's email has already been confirmed.");
 
+    public static readonly Error InvalidCredentials = new(
+    "User.InvalidCredentials",
+    "The email address or password is incorrect.");
+
+    public static readonly Error UserInactive = new(
+        "User.Inactive",
+        "The user account is inactive.");
+
 }

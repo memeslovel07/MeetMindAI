@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Common\models\" />
     <Folder Include="Common\Results\" />
   </ItemGroup>
 
