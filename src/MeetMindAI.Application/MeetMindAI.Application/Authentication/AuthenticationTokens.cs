@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MeetMindAI.Application.Common.Authentication;
+namespace MeetMindAI.Application.Authentication;
 
 /// <summary>
 /// Represents the authentication tokens issued after a successful authentication.

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using MeetMindAI.Application.Common.Authentication;
+using MeetMindAI.Application.Authentication;
 
 namespace MeetMindAI.Application.Common.Abstractions.Services;
 

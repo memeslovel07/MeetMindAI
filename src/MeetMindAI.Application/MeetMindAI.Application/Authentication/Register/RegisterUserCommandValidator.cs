@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using FluentValidation;
 
+using MeetMindAI.Domain.Constants;
+
 namespace MeetMindAI.Application.Authentication.Register;
 
 /// <summary>
@@ -18,17 +20,17 @@ public sealed class RegisterUserCommandValidator
     {
         RuleFor(x => x.FirstName)
             .NotEmpty()
-            .MaximumLength(100)
+           .MaximumLength(ValidationConstants.FirstNameMaxLength)
             .MinimumLength(2);
 
         RuleFor(x => x.LastName)
             .NotEmpty()
-            .MaximumLength(100)
+           .MaximumLength(ValidationConstants.LastNameMaxLength)
             .MinimumLength(2);
 
         RuleFor(x => x.Email)
             .NotEmpty()
-            .MaximumLength(256)
+            .MaximumLength(ValidationConstants.EmailMaxLength)
             .EmailAddress();
 
         RuleFor(x => x.Password)

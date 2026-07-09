@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
 using MeetMindAI.Application.Common.Abstractions.Services;
-using MeetMindAI.Application.Common.Authentication;
 
 using IdentityPasswordVerificationResult =
     Microsoft.AspNetCore.Identity.PasswordVerificationResult;
@@ -32,7 +31,7 @@ public sealed class PasswordHasher : IPasswordHasher
     }
 
     /// <inheritdoc />
-    public MeetMindAI.Application.Common.Authentication.PasswordVerificationResult Verify(
+    public Application.Authentication.PasswordVerificationResult Verify(
       string password,
       string passwordHash)
     {
@@ -47,17 +46,17 @@ public sealed class PasswordHasher : IPasswordHasher
         return result switch
         {
             IdentityPasswordVerificationResult.Success =>
-                new MeetMindAI.Application.Common.Authentication.PasswordVerificationResult(
+                new MeetMindAI.Application.Authentication.PasswordVerificationResult(
                     true,
                     false),
 
             IdentityPasswordVerificationResult.SuccessRehashNeeded =>
-                new MeetMindAI.Application.Common.Authentication.PasswordVerificationResult(
+                new MeetMindAI.Application.Authentication.PasswordVerificationResult(
                     true,
                     true),
 
             _ =>
-                new MeetMindAI.Application.Common.Authentication.PasswordVerificationResult(
+                new MeetMindAI.Application.Authentication.PasswordVerificationResult(
                     false,
                     false)
         };

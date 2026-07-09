@@ -67,4 +67,9 @@ public static class UserErrors
         "User.EmailAlreadyConfirmed",
         "The user's email has already been confirmed.");
 
+    public static readonly Error EmailAlreadyExists =
+    new(
+        "User.EmailAlreadyExists",
+        "The user's email has already been confirmed.");
+
 }

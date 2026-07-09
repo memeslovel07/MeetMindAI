@@ -5,11 +5,11 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using MeetMindAI.Application.Common.Abstractions.Services;
-using MeetMindAI.Application.Common.Authentication;
 using MeetMindAI.Domain.Entities.Users;
 using MeetMindAI.Persistence.Options;
 
 using Microsoft.Extensions.Options;
+using MeetMindAI.Application.Authentication;
 
 namespace MeetMindAI.Infrastructure.Authentication;
 

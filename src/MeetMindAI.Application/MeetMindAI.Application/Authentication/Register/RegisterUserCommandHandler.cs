@@ -44,44 +44,43 @@ public sealed class RegisterUserCommandHandler
                 cancellationToken))
         {
             return Result<RegisterUserResponse>.Failure(
-    new Error(
-        "User.EmailAlreadyExists",
-        "A user with this email address already exists."));
+        UserErrors.EmailAlreadyExists);
         }
 
-        // Hash the password
-        var passwordHash = _passwordHasher.Hash(request.Password);
+            // Hash the password
+            var passwordHash = _passwordHasher.Hash(request.Password);
 
-        
 
-        var createUserResult = User.Create(
-            request.Email,
-            passwordHash,
-            request.FirstName,
-            request.LastName);
 
-        if (createUserResult.IsFailure)
-        {
-            return Result<RegisterUserResponse>.Failure(
-                createUserResult.Error);
+            var createUserResult = User.Create(
+                request.Email,
+                passwordHash,
+                request.FirstName,
+                request.LastName);
+
+            if (createUserResult.IsFailure)
+            {
+                return Result<RegisterUserResponse>.Failure(
+                    createUserResult.Error);
+            }
+
+            var user = createUserResult.Value;
+
+            await _userRepository.AddAsync(
+                user,
+                cancellationToken);
+
+
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            // Return response
+            return Result<RegisterUserResponse>.Success(
+                new RegisterUserResponse(
+                    user.Id,
+                    user.FirstName,
+                    user.LastName,
+                    user.Email));
         }
-
-        var user = createUserResult.Value;
-
-        await _userRepository.AddAsync(
-            user,
-            cancellationToken);
-
-
-        
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
-        // Return response
-        return Result<RegisterUserResponse>.Success(
-            new RegisterUserResponse(
-                user.Id,
-                user.FirstName,
-                user.LastName,
-                user.Email));
     }
-}
+
