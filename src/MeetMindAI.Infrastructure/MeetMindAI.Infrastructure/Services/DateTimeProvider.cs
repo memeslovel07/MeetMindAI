@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using MeetMindAI.Application.Common.Abstractions.Services;
 
-namespace MeetMindAI.Persistence.Services;
+namespace MeetMindAI.Infrastructure.Services;
 
 /// <summary>
 /// Provides the current UTC date and time.

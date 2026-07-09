@@ -9,9 +9,14 @@ namespace MeetMindAI.Shared.Results;
 /// <param name="Description">
 /// A human-readable description of the error.
 /// </param>
+/// <param name="Target">
+/// The field or member associated with the error, if applicable.
+/// Used primarily for validation errors.
+/// </param>
 public sealed record Error(
     string Code,
-    string Description)
+    string Description,
+    string? Target = null)
 {
     /// <summary>
     /// Represents the absence of an error.

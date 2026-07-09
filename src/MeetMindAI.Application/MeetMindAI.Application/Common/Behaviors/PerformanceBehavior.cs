@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MeetMindAI.Persistence.Services;
-internal class CurrentUserService
+namespace MeetMindAI.Application.Common.Behaviors;
+internal class PerformanceBehavior
 {
 }

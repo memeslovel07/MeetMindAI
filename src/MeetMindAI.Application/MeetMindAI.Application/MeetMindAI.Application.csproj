@@ -17,4 +17,8 @@
     <ProjectReference Include="..\..\MeetMindAI.Shared\MeetMindAI.Shared\MeetMindAI.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Common\Results\" />
+  </ItemGroup>
+
 </Project>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MeetMindAI.Persistence.Services;
-internal class JwtTokenGenerator
+namespace MeetMindAI.Application.Common.Behaviors;
+internal class LoggingBehavior
 {
 }

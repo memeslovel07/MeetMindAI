@@ -12,7 +12,7 @@ using MeetMindAI.Application.Common.Authentication;
 using IdentityPasswordVerificationResult =
     Microsoft.AspNetCore.Identity.PasswordVerificationResult;
 
-namespace MeetMindAI.Persistence.Services;
+namespace MeetMindAI.Infrastructure.Authentication;
 
 /// <summary>
 /// Provides password hashing using ASP.NET Core Identity.
