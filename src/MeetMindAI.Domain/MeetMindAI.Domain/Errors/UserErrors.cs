@@ -80,4 +80,13 @@ public static class UserErrors
         "User.Inactive",
         "The user account is inactive.");
 
+    public static readonly Error InvalidRefreshToken = new(
+    "User.InvalidRefreshToken",
+    "The refresh token is invalid, expired, or has been revoked.");
+
+    public static readonly Error UserNotFound =
+    new(
+        "User.NotFound",
+        "The requested user could not be found.");
+
 }

@@ -32,10 +32,15 @@ public static class DependencyInjection
             cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
 
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+
+
+
         });
 
         services.AddValidatorsFromAssembly(
             typeof(DependencyInjection).Assembly);
+
+
 
         return services;
     }

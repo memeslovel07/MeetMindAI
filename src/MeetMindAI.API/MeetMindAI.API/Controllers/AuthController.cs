@@ -1,11 +1,12 @@
-using MeetMindAI.API.Contracts.Authentication;
-using MeetMindAI.Application.Authentication.Register;
-using MeetMindAI.Application.Authentication.Login;
+using MediatR;
 
+using MeetMindAI.API.Contracts.Authentication;
+using MeetMindAI.Application.Authentication.Login;
+using MeetMindAI.Application.Authentication.RefreshToken;
+using MeetMindAI.Application.Authentication.Register;
+using MeetMindAI.Application.Authentication.Logout;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
-using MediatR;
 
 
 
@@ -83,6 +84,55 @@ public sealed class AuthController : ControllerBase
         }
 
         return Ok(result.Value);
+    }
+
+    [HttpPost("refresh")]
+    [ProducesResponseType(typeof(RefreshTokenResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> Refresh(
+    RefreshTokenRequest request,
+    CancellationToken cancellationToken)
+    {
+        var command = new RefreshTokenCommand(
+            request.RefreshToken);
+
+        var result = await _sender.Send(
+            command,
+            cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return Unauthorized(result.Error);
+        }
+
+        return Ok(result.Value);
+    }
+
+    /// <summary>
+    /// Logs out the current user.
+    /// </summary>
+    [HttpPost("logout")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> Logout(
+        LogoutRequest request,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        var command = new LogoutCommand(
+            request.RefreshToken);
+
+        var result = await _sender.Send(
+            command,
+            cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return BadRequest(result.Error);
+        }
+
+        return NoContent();
     }
 
 }

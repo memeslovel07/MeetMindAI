@@ -23,17 +23,18 @@ public sealed class RefreshTokenRepository
     }
 
     public async Task<RefreshToken?> GetByTokenAsync(
-        string token,
-        CancellationToken cancellationToken = default)
+      string token,
+      CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(token);
 
         token = token.Trim();
 
         return await Context.RefreshTokens
-            .SingleOrDefaultAsync(
-                x => x.Token == token,
-                cancellationToken);
+    .Include(x => x.User)
+    .SingleOrDefaultAsync(
+        x => x.Token == token,
+        cancellationToken);
     }
 
     public async Task<IReadOnlyList<RefreshToken>> GetByUserIdAsync(

@@ -1,6 +1,8 @@
 using MeetMindAI.API.Middleware;
 using MeetMindAI.Application;
+using MeetMindAI.Application.Common.Abstractions.Services;
 using MeetMindAI.Infrastructure;
+using MeetMindAI.Infrastructure.Authentication;
 using MeetMindAI.Persistence;
 
 using Microsoft.OpenApi.Models;
@@ -11,6 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 // MVC
 builder.Services.AddControllers();
@@ -56,6 +61,8 @@ builder.Services.AddSwaggerGen(options =>
             Array.Empty<string>()
         }
     });
+
+
 
 });
 

@@ -5,7 +5,7 @@ using MeetMindAI.Application.Common.Abstractions.Services;
 using MeetMindAI.Domain.Entities.Users;
 using MeetMindAI.Domain.Errors;
 using MeetMindAI.Shared.Results;
-
+using MeetMindAI.Application.Authentication.RefreshToken;
 namespace MeetMindAI.Application.Authentication.Login;
 
 /// <summary>
@@ -71,7 +71,7 @@ public sealed class LoginUserCommandHandler
 
         var tokens = _jwtTokenGenerator.Generate(user);
 
-        var refreshToken = RefreshToken.Create(
+        var refreshToken = Domain.Entities.Users.RefreshToken.Create(
             user.Id,
             tokens.RefreshToken,
             tokens.RefreshTokenExpiresAtUtc);

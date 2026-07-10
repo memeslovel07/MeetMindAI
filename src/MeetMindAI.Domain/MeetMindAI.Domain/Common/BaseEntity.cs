@@ -13,7 +13,7 @@ public abstract class BaseEntity : IEntity
     /// <summary>
     /// Gets the unique identifier of the entity.
     /// </summary>
-    public Guid Id { get; protected set; }
+    public Guid Id { get; protected set; } = Guid.NewGuid();
 
     /// <summary>
     /// Stores the domain events raised by the entity.
