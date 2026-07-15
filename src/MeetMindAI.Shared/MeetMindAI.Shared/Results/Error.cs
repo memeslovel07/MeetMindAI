@@ -24,4 +24,9 @@ public sealed record Error(
     public static readonly Error None = new(
         string.Empty,
         string.Empty);
+
+    public static readonly Error Unauthorized =
+    new(
+        "General.Unauthorized",
+        "The current user is not authorized to perform this operation.");
 }

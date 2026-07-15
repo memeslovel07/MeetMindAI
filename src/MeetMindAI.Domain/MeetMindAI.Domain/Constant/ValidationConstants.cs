@@ -14,4 +14,12 @@ public static class ValidationConstants
     public const int LastNameMaxLength = 100;
 
     public const int AvatarUrlMaxLength = 2048;
+
+    public const int MeetingTitleMaxLength = 200;
+
+    public const int MeetingDescriptionMaxLength = 4000;
+
+    public const int MeetingMinDurationMinutes = 1;
+
+    public const int MeetingMaxDurationMinutes = 1440;
 }

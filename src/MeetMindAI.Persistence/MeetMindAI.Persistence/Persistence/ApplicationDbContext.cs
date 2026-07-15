@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 using MeetMindAI.Application.Common.Abstractions.Persistence;
 using MeetMindAI.Domain.Entities.Users;
+using MeetMindAI.Domain.Entities.Meetings;
 
 namespace MeetMindAI.Persistence.Persistence;
 
@@ -35,6 +36,8 @@ public sealed class ApplicationDbContext
     /// Gets the refresh tokens.
     /// </summary>
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+
+    public DbSet<Meeting> Meetings => Set<Meeting>();
 
     /// <inheritdoc />
     protected override void OnModelCreating(
