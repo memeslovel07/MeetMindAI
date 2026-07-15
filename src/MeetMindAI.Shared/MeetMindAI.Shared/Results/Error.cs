@@ -29,4 +29,9 @@ public sealed record Error(
     new(
         "General.Unauthorized",
         "The current user is not authorized to perform this operation.");
+
+    public static readonly Error Forbidden =
+    new(
+        "General.Forbidden",
+        "You are not allowed to perform this operation.");
 }

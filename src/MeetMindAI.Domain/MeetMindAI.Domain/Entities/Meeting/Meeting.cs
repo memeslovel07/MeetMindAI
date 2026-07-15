@@ -279,4 +279,29 @@ public sealed class Meeting : AggregateRoot
         return Result.Success();
     }
 
+    /// <summary>
+    /// Soft deletes the meeting.
+    /// </summary>
+    public Result Delete(
+        Guid? deletedBy,
+        DateTime deletedAtUtc)
+    {
+        if (Status == MeetingStatus.InProgress)
+        {
+            return Result.Failure(
+                MeetingErrors.CannotDeleteInProgressMeeting);
+        }
+
+        if (IsDeleted)
+        {
+            return Result.Success();
+        }
+
+        MarkAsDeleted(
+            deletedBy,
+            deletedAtUtc);
+
+        return Result.Success();
+    }
+
 }

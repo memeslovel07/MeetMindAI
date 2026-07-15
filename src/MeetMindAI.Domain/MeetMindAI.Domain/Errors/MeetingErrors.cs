@@ -56,4 +56,14 @@ public static class MeetingErrors
         new(
             "Meeting.InvalidStatusTransition",
             "The requested meeting status transition is not allowed.");
+
+    public static readonly Error NotFound =
+    new(
+        "Meeting.NotFound",
+        "The requested meeting was not found.");
+
+    public static readonly Error CannotDeleteInProgressMeeting =
+    new(
+        "Meeting.CannotDeleteInProgressMeeting",
+        "A meeting that is currently in progress cannot be deleted.");
 }

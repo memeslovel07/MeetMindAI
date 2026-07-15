@@ -22,9 +22,9 @@ public sealed class MeetingRepository
         CancellationToken cancellationToken = default)
     {
         return await Context.Meetings
-            .SingleOrDefaultAsync(
-                x => x.Id == id,
-                cancellationToken);
+    .SingleOrDefaultAsync(
+        x => x.Id == id && !x.IsDeleted,
+        cancellationToken);
     }
 
     public async Task<IReadOnlyList<Meeting>> GetByOrganizerIdAsync(
@@ -32,7 +32,7 @@ public sealed class MeetingRepository
         CancellationToken cancellationToken = default)
     {
         return await Context.Meetings
-            .Where(x => x.OrganizerId == organizerId)
+            .Where(x => x.OrganizerId == organizerId &&!x.IsDeleted)
             .OrderByDescending(x => x.CreatedAtUtc)
             .ToListAsync(cancellationToken);
     }
