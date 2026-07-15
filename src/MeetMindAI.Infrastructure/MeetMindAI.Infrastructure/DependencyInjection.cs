@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
+using MeetMindAI.Application.Common.Authorization;
+using MeetMindAI.Domain.Enums;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Options;
@@ -32,6 +33,25 @@ public static class DependencyInjection
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
+
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy(
+                AuthorizationPolicies.AdminOnly,
+                policy =>
+                {
+                    policy.RequireRole(UserRole.Admin.ToString());
+                });
+
+            options.AddPolicy(
+                AuthorizationPolicies.UserOnly,
+                policy =>
+                {
+                    policy.RequireRole(
+                        UserRole.User.ToString(),
+                        UserRole.Admin.ToString());
+                });
+        });
 
         services
             .AddOptions<JwtOptions>()
