@@ -34,4 +34,27 @@ public sealed record Error(
     new(
         "General.Forbidden",
         "You are not allowed to perform this operation.");
+
+    public static readonly Error NotFound =
+        new(
+        "General.NotFound",
+        "The requested resource was not found.");
+
+    public static readonly Error Conflict =
+        new(
+        "General.Conflict",
+        "The request could not be completed due to a conflict with the current state of the resource.");
+
+    public static readonly Error ValidationError =
+        new(
+        "General.ValidationError",
+        "One or more validation errors occurred.");
+
+    public static readonly Error InternalServerError =
+        new(
+        "General.InternalServerError",
+        "An unexpected error occurred while processing the request.");
+
+    
+
 }

@@ -75,6 +75,8 @@ public sealed class Meeting : AggregateRoot
     /// </summary>
     public MeetingStatus Status { get; private set; }
 
+    public Transcript? Transcript { get; private set; }
+
     /// <summary>
     /// Creates a new meeting.
     /// </summary>

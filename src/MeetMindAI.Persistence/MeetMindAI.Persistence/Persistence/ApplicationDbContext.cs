@@ -39,6 +39,8 @@ public sealed class ApplicationDbContext
 
     public DbSet<Meeting> Meetings => Set<Meeting>();
 
+    public DbSet<Transcript> Transcripts => Set<Transcript>();
+
     /// <inheritdoc />
     protected override void OnModelCreating(
         ModelBuilder modelBuilder)

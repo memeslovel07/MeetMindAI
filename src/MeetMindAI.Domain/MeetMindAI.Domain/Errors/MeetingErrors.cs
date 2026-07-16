@@ -66,4 +66,6 @@ public static class MeetingErrors
     new(
         "Meeting.CannotDeleteInProgressMeeting",
         "A meeting that is currently in progress cannot be deleted.");
+
+
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using MeetMindAI.Application.Common.Abstractions.Persistence;
+using MeetMindAI.Application.Common.Interfaces.Persistence;
 using MeetMindAI.Persistence.Persistence;
 using MeetMindAI.Persistence.Persistence.Repositories;
 
@@ -47,6 +48,8 @@ public static class DependencyInjection
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
         services.AddScoped<IMeetingRepository, MeetingRepository>();
+
+        services.AddScoped<ITranscriptRepository, TranscriptRepository>();
 
         return services;
     }
