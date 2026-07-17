@@ -33,7 +33,7 @@ public static class DependencyInjection
         ArgumentNullException.ThrowIfNull(configuration);
 
         var connectionString =
-            configuration.GetConnectionString("DefaultConnection")
+            configuration.GetConnectionString("Database")
             ?? throw new InvalidOperationException(
                 "The database connection string 'DefaultConnection' was not found.");
 
