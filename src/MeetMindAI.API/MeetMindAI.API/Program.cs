@@ -1,10 +1,12 @@
 using MeetMindAI.API.Middleware;
 using MeetMindAI.Application;
 using MeetMindAI.Application.Common.Abstractions.Services;
+using MeetMindAI.Application.Common.Options;
 using MeetMindAI.Infrastructure;
 using MeetMindAI.Infrastructure.Authentication;
 using MeetMindAI.Persistence;
 
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,16 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+builder.Services.Configure<AiOptions>(
+    builder.Configuration.GetSection(AiOptions.SectionName));
+
+builder.Services
+    .AddOptions<AiOptions>()
+    .Bind(builder.Configuration.GetSection(AiOptions.SectionName))
+    .ValidateOnStart();
+
+builder.Services.AddSingleton<IValidateOptions<AiOptions>, AiOptionsValidator>();
 
 // MVC
 builder.Services.AddControllers();

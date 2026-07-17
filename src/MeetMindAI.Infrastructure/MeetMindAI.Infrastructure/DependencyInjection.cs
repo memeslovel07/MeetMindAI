@@ -4,18 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using MeetMindAI.Application.Common.Abstractions.AI;
+using MeetMindAI.Application.Common.Abstractions.Services;
+using MeetMindAI.Application.Common.Abstractions.Storage;
 using MeetMindAI.Application.Common.Authorization;
 using MeetMindAI.Domain.Enums;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Options;
-using MeetMindAI.Application.Common.Abstractions.Services;
+using MeetMindAI.Infrastructure.AI.Mock;
 using MeetMindAI.Infrastructure.Authentication;
 using MeetMindAI.Infrastructure.Services;
+using MeetMindAI.Infrastructure.Storage;
+using MeetMindAI.Infrastructure.Storage.Local;
 using MeetMindAI.Persistence.Options;
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace MeetMindAI.Infrastructure;
 
@@ -96,6 +101,15 @@ public static class DependencyInjection
         services.AddScoped<IPasswordHasher, PasswordHasher>();
 
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
+        services.Configure<LocalStorageOptions>(
+    configuration.GetSection(LocalStorageOptions.SectionName));
+
+        services.AddScoped<IFileStorageService, LocalFileStorageService>();
+
+        services.AddScoped<IAiSummaryService, MockAiSummaryService>();
+
+
 
         return services;
     }

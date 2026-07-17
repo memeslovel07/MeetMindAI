@@ -41,6 +41,8 @@ public sealed class ApplicationDbContext
 
     public DbSet<Transcript> Transcripts => Set<Transcript>();
 
+    public DbSet<MeetingAttachment> MeetingAttachments => Set<MeetingAttachment>();
+
     /// <inheritdoc />
     protected override void OnModelCreating(
         ModelBuilder modelBuilder)

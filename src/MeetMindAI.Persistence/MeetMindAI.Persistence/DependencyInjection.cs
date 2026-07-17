@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 using MeetMindAI.Application.Common.Abstractions.Persistence;
 using MeetMindAI.Application.Common.Interfaces.Persistence;
+using MeetMindAI.Domain.Entities.Meetings;
 using MeetMindAI.Persistence.Persistence;
 using MeetMindAI.Persistence.Persistence.Repositories;
+using MeetMindAI.Persistence.Repositories;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -50,6 +52,8 @@ public static class DependencyInjection
         services.AddScoped<IMeetingRepository, MeetingRepository>();
 
         services.AddScoped<ITranscriptRepository, TranscriptRepository>();
+
+        services.AddScoped<IMeetingAttachmentRepository, MeetingAttachmentRepository>();
 
         return services;
     }

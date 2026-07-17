@@ -306,4 +306,8 @@ public sealed class Meeting : AggregateRoot
         return Result.Success();
     }
 
+    private readonly List<MeetingAttachment> _attachments = new();
+
+    public IReadOnlyCollection<MeetingAttachment> Attachments => _attachments.AsReadOnly();
+
 }
