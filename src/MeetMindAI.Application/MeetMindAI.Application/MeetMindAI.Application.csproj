@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+        <PackageReference Include="MediatR" Version="14.1.0" />
+<<<<<<< HEAD
+        <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
+=======
+>>>>>>> ae56db5 (shared on process)
+    </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\MeetMindAI.Domain\MeetMindAI.Domain\MeetMindAI.Domain.csproj" />
+    <ProjectReference Include="..\..\MeetMindAI.Shared\MeetMindAI.Shared\MeetMindAI.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\Results\" />
+    <Folder Include="MeetingFiles\DownloadMeetingFile\" />
+    <Folder Include="MeetingFiles\DeleteMeetingFile\" />
+    <Folder Include="MeetingFiles\UploadMeetingFile\" />
+  </ItemGroup>
+
+</Project>

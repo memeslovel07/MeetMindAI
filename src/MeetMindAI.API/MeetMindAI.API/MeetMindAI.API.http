@@ -1,0 +1,6 @@
+@MeetMindAI.API_HostAddress = http://localhost:5047
+
+GET {{MeetMindAI.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
