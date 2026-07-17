@@ -22,6 +22,8 @@ public interface IRepository<TEntity>
         TEntity entity,
         CancellationToken cancellationToken = default);
 
+    void Update(TEntity entity);
+
     /// <summary>
     /// Removes an entity from the repository.
     /// </summary>

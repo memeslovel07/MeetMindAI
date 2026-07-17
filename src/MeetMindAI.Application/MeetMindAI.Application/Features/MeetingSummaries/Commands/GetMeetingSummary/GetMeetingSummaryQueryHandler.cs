@@ -1,6 +1,6 @@
 using MediatR;
 
-using MeetMindAI.Application.Common.Interfaces.Persistence;
+using MeetMindAI.Application.Common.Abstractions.Persistence;
 using MeetMindAI.Application.Features.MeetingSummaries.Commands.GetMeetingSummary;
 using MeetMindAI.Domain.Errors;
 using MeetMindAI.Shared.Results;

@@ -55,6 +55,12 @@ public static class DependencyInjection
 
         services.AddScoped<IMeetingAttachmentRepository, MeetingAttachmentRepository>();
 
+        services.AddScoped<IMeetingRepository, MeetingRepository>();
+        services.AddScoped<ITranscriptRepository, TranscriptRepository>();
+        
+
+        services.AddScoped<IMeetingSummaryRepository, MeetingSummaryRepository>();
+
         return services;
     }
 }

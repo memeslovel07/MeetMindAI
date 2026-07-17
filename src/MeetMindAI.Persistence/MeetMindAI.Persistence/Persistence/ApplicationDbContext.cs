@@ -43,6 +43,8 @@ public sealed class ApplicationDbContext
 
     public DbSet<MeetingAttachment> MeetingAttachments => Set<MeetingAttachment>();
 
+    public DbSet<MeetingSummary> MeetingSummaries => Set<MeetingSummary>();
+
     /// <inheritdoc />
     protected override void OnModelCreating(
         ModelBuilder modelBuilder)

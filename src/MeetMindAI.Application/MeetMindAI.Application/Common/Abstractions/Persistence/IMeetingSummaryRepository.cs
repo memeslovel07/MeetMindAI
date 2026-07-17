@@ -1,6 +1,6 @@
 using MeetMindAI.Domain.Entities.Meetings;
 
-namespace MeetMindAI.Application.Common.Interfaces.Persistence;
+namespace MeetMindAI.Application.Common.Abstractions.Persistence;
 
 public interface IMeetingSummaryRepository
 {
