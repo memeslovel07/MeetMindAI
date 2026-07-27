@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 
 namespace MeetMindAI.Persistence.Persistence;
 
@@ -15,21 +10,29 @@ namespace MeetMindAI.Persistence.Persistence;
 public sealed class DesignTimeDbContextFactory
     : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
-    public ApplicationDbContext CreateDbContext(string[] args)
+    private const string UserSecretsId =
+        "59549db0-74a1-4df1-9b12-8735b2f8aa82";
+
+    public ApplicationDbContext CreateDbContext(
+        string[] args)
     {
-        const string connectionString =
-            "Host=ep-mute-sound-at6e2rfn-pooler.c-9.us-east-1.aws.neon.tech;" +
-            "Database=neondb;" +
-            "Username=neondb_owner;" +
-            "Password=npg_HmAUKqSu5zV2;" +
-            "SSL Mode=Require;" +
-            "Trust Server Certificate=true;";
+        var configuration = new ConfigurationBuilder()
+            .AddUserSecrets(UserSecretsId)
+            .Build();
+
+        var connectionString =
+            configuration.GetConnectionString(
+                "Database")
+            ?? throw new InvalidOperationException(
+                "The database connection string " +
+                "'DefaultConnection' was not found.");
 
         var optionsBuilder =
             new DbContextOptionsBuilder<ApplicationDbContext>();
 
         optionsBuilder.UseNpgsql(connectionString);
 
-        return new ApplicationDbContext(optionsBuilder.Options);
+        return new ApplicationDbContext(
+            optionsBuilder.Options);
     }
 }

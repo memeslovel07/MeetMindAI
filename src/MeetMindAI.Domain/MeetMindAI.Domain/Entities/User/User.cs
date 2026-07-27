@@ -96,6 +96,10 @@ public sealed class User : AggregateRoot
     /// </summary>
     public DateTime? LastLoginAtUtc { get; private set; }
 
+    public Guid? AssignedUserId { get; private set; }
+
+    public User? AssignedUser { get; private set; }
+
 
 
     /// <summary>

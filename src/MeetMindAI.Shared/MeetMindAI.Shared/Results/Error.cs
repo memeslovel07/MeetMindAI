@@ -55,6 +55,9 @@ public sealed record Error(
         "General.InternalServerError",
         "An unexpected error occurred while processing the request.");
 
-    
+    public static Error Validation(string code, string description, string? target = null) =>
+        new(code, description, target);
+
+
 
 }

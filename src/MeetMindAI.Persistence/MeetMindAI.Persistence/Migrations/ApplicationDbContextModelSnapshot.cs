@@ -22,6 +22,74 @@ namespace MeetMindAI.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("MeetMindAI.Domain.Entities.Meetings.ActionItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AssignedUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("DeletedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<DateTime?>("DueDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("MeetingId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Source")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignedUserId");
+
+                    b.HasIndex("MeetingId");
+
+                    b.HasIndex("MeetingId", "Status");
+
+                    b.ToTable("ActionItems", (string)null);
+                });
+
             modelBuilder.Entity("MeetMindAI.Domain.Entities.Meetings.Meeting", b =>
                 {
                     b.Property<Guid>("Id")
@@ -289,6 +357,9 @@ namespace MeetMindAI.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("AssignedUserId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("AvatarUrl")
                         .HasMaxLength(2048)
                         .HasColumnType("character varying(2048)");
@@ -353,10 +424,30 @@ namespace MeetMindAI.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AssignedUserId");
+
                     b.HasIndex("NormalizedEmail")
                         .IsUnique();
 
                     b.ToTable("User", (string)null);
+                });
+
+            modelBuilder.Entity("MeetMindAI.Domain.Entities.Meetings.ActionItem", b =>
+                {
+                    b.HasOne("MeetMindAI.Domain.Entities.Users.User", "AssignedUser")
+                        .WithMany()
+                        .HasForeignKey("AssignedUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("MeetMindAI.Domain.Entities.Meetings.Meeting", "Meeting")
+                        .WithMany()
+                        .HasForeignKey("MeetingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AssignedUser");
+
+                    b.Navigation("Meeting");
                 });
 
             modelBuilder.Entity("MeetMindAI.Domain.Entities.Meetings.Meeting", b =>
@@ -419,6 +510,15 @@ namespace MeetMindAI.Persistence.Migrations
                     b.Navigation("ReplacedByRefreshToken");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MeetMindAI.Domain.Entities.Users.User", b =>
+                {
+                    b.HasOne("MeetMindAI.Domain.Entities.Users.User", "AssignedUser")
+                        .WithMany()
+                        .HasForeignKey("AssignedUserId");
+
+                    b.Navigation("AssignedUser");
                 });
 
             modelBuilder.Entity("MeetMindAI.Domain.Entities.Meetings.Meeting", b =>

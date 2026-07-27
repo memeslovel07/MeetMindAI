@@ -1,0 +1,15 @@
+<Window x:Class="MeetMindAI.WPF.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MeetMindAI"
+        Icon="/Assets/MeetMindAI.ico"
+        Width="1200"
+        Height="720"
+        MinWidth="1000"
+        MinHeight="650"
+        WindowStartupLocation="CenterScreen"
+        Background="#F8FAFC">
+
+    <ContentControl x:Name="MainContent"/>
+
+</Window>

@@ -1,9 +1,63 @@
-﻿<Application x:Class="MeetMindAI.WPF.App"
+<Application x:Class="MeetMindAI.WPF.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:MeetMindAI.WPF"
-             StartupUri="MainWindow.xaml">
+             xmlns:converters="clr-namespace:MeetMindAI.WPF.Converters"
+             xmlns:dashboardVm="clr-namespace:MeetMindAI.WPF.ViewModels.Dashboard"
+             xmlns:dashboardViews="clr-namespace:MeetMindAI.WPF.Views.Dashboard"
+            xmlns:meetingsVm="clr-namespace:MeetMindAI.WPF.ViewModels.Meetings"
+xmlns:meetingsViews="clr-namespace:MeetMindAI.WPF.Views.Meetings"
+             xmlns:transcriptVm="clr-namespace:MeetMindAI.WPF.ViewModels.Transcripts"
+xmlns:transcriptViews="clr-namespace:MeetMindAI.WPF.Views.Transcripts"
+             xmlns:summaryVm="clr-namespace:MeetMindAI.WPF.ViewModels.MeetingSummaries"
+xmlns:summaryViews="clr-namespace:MeetMindAI.WPF.Views.MeetingSummaries"
+             xmlns:actionItemsVm="clr-namespace:MeetMindAI.WPF.ViewModels.ActionItems"
+xmlns:actionItemsViews="clr-namespace:MeetMindAI.WPF.Views.ActionItems"
+             xmlns:attachmentsVm="clr-namespace:MeetMindAI.WPF.ViewModels.MeetingAttachments"
+xmlns:attachmentsViews="clr-namespace:MeetMindAI.WPF.Views.MeetingAttachments">
+
     <Application.Resources>
-         
+
+        <converters:BooleanToVisibilityConverter
+            x:Key="BooleanToVisibilityConverter"/>
+
+        <converters:InverseBooleanToVisibilityConverter
+            x:Key="InverseBooleanToVisibilityConverter"/>
+
+        <converters:StringToVisibilityConverter
+            x:Key="StringToVisibilityConverter"/>
+
+        <converters:ZeroToVisibilityConverter
+            x:Key="ZeroToVisibilityConverter"/>
+
+        <DataTemplate DataType="{x:Type dashboardVm:DashboardViewModel}">
+            <dashboardViews:DashboardView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type meetingsVm:MeetingsViewModel}">
+            <meetingsViews:MeetingsView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type meetingsVm:MeetingDetailsViewModel}">
+            <meetingsViews:MeetingDetailsView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type transcriptVm:TranscriptViewModel}">
+            <transcriptViews:TranscriptView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type summaryVm:MeetingSummaryViewModel}">
+            <summaryViews:MeetingSummaryView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type actionItemsVm:ActionItemsViewModel}">
+            <actionItemsViews:ActionItemsView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type attachmentsVm:MeetingAttachmentsViewModel}">
+            <attachmentsViews:MeetingAttachmentsView/>
+        </DataTemplate>
+
+
     </Application.Resources>
+
 </Application>

@@ -1,5 +1,6 @@
 using MediatR;
 
+using MeetMindAI.Application.Common.Abstractions.Services;
 using MeetMindAI.Application.Common.Abstractions.Persistence;
 using MeetMindAI.Application.Common.Abstractions.Storage;
 using MeetMindAI.Application.Common.Interfaces.Persistence;
@@ -17,19 +18,23 @@ public sealed class DownloadAttachmentQueryHandler
     private readonly IMeetingRepository _meetingRepository;
     private readonly IMeetingAttachmentRepository _attachmentRepository;
     private readonly IFileStorageService _fileStorageService;
+    private readonly ICurrentUserService _currentUserService;
 
     public DownloadAttachmentQueryHandler(
-        IMeetingRepository meetingRepository,
-        IMeetingAttachmentRepository attachmentRepository,
-        IFileStorageService fileStorageService)
+    IMeetingRepository meetingRepository,
+    IMeetingAttachmentRepository attachmentRepository,
+    IFileStorageService fileStorageService,
+    ICurrentUserService currentUserService)
     {
         ArgumentNullException.ThrowIfNull(meetingRepository);
         ArgumentNullException.ThrowIfNull(attachmentRepository);
         ArgumentNullException.ThrowIfNull(fileStorageService);
+        ArgumentNullException.ThrowIfNull(currentUserService);
 
         _meetingRepository = meetingRepository;
         _attachmentRepository = attachmentRepository;
         _fileStorageService = fileStorageService;
+        _currentUserService = currentUserService;
     }
 
     public async Task<Result<FileDownloadResult>> Handle(
@@ -44,6 +49,12 @@ public sealed class DownloadAttachmentQueryHandler
         {
             return Result<FileDownloadResult>.Failure(
                 MeetingErrors.NotFound);
+        }
+
+        if (_currentUserService.UserId != meeting.OrganizerId)
+        {
+            return Result<FileDownloadResult>.Failure(
+                Error.Forbidden);
         }
 
         var attachment = await _attachmentRepository.GetByIdAsync(

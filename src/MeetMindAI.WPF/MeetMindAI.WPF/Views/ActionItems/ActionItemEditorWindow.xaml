@@ -1,0 +1,146 @@
+<Window x:Class="MeetMindAI.WPF.Views.ActionItems.ActionItemEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{Binding WindowTitle}"
+        Width="520"
+        Height="570"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#F8FAFC">
+
+    <Grid Margin="28">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+
+        <StackPanel Margin="0,0,0,24">
+
+            <TextBlock Text="{Binding WindowTitle}"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       Foreground="#111827"/>
+
+            <TextBlock Text="Add the task details and due date."
+                       FontSize="13"
+                       Foreground="#64748B"
+                       Margin="0,6,0,0"/>
+
+        </StackPanel>
+
+        <!-- Form -->
+
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto">
+
+            <StackPanel>
+
+                <TextBlock Text="Title"
+                           FontWeight="SemiBold"
+                           Foreground="#334155"
+                           Margin="0,0,0,6"/>
+
+                <TextBox Text="{Binding Title,
+                                UpdateSourceTrigger=PropertyChanged}"
+                         Height="42"
+                         Padding="12,0"
+                         VerticalContentAlignment="Center"/>
+
+
+                <TextBlock Text="Description"
+                           FontWeight="SemiBold"
+                           Foreground="#334155"
+                           Margin="0,18,0,6"/>
+
+                <TextBox Text="{Binding Description,
+                                UpdateSourceTrigger=PropertyChanged}"
+                         Height="100"
+                         Padding="12"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"
+                         VerticalScrollBarVisibility="Auto"/>
+
+
+                <TextBlock Text="Priority"
+                           FontWeight="SemiBold"
+                           Foreground="#334155"
+                           Margin="0,18,0,6"/>
+
+                <ComboBox ItemsSource="{Binding Priorities}"
+                          SelectedItem="{Binding Priority}"
+                          Height="42"
+                          Padding="10,0"/>
+
+
+                <TextBlock Text="Due Date"
+                           FontWeight="SemiBold"
+                           Foreground="#334155"
+                           Margin="0,18,0,6"/>
+
+                <DatePicker SelectedDate="{Binding DueDate}"
+                            Height="42"/>
+
+
+                <!-- Error -->
+
+                <Border Background="#FEF2F2"
+                        CornerRadius="8"
+                        Padding="12"
+                        Margin="0,18,0,0"
+                        Visibility="{Binding ErrorMessage,
+                            Converter={StaticResource StringToVisibilityConverter}}">
+
+                    <TextBlock Text="{Binding ErrorMessage}"
+                               Foreground="#B91C1C"
+                               TextWrapping="Wrap"/>
+
+                </Border>
+
+            </StackPanel>
+
+        </ScrollViewer>
+
+        <!-- Actions -->
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,24,0,0">
+
+            <Button Content="Cancel"
+                    Command="{Binding CancelCommand}"
+                    Height="40"
+                    MinWidth="90"
+                    Margin="0,0,10,0"/>
+
+            <Button Command="{Binding SaveCommand}"
+                    Height="40"
+                    MinWidth="130"
+                    Padding="18,0"
+                    Background="#4F46E5"
+                    Foreground="White"
+                    BorderThickness="0">
+
+                <Grid>
+
+                    <TextBlock Text="{Binding SaveButtonText}"
+                               Visibility="{Binding IsSaving,
+                                   Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+
+                    <TextBlock Text="Saving..."
+                               Visibility="{Binding IsSaving,
+                                   Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                </Grid>
+
+            </Button>
+
+        </StackPanel>
+
+    </Grid>
+
+</Window>

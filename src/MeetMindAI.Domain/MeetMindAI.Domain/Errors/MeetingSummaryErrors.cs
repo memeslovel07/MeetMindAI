@@ -41,4 +41,9 @@ public static class MeetingSummaryErrors
         new(
             "MeetingSummary.NotFound",
             "Meeting summary not found.");
+
+    public static readonly Error TranscriptNotFound =
+        new(
+            "MeetingSummary.TranscriptNotFound",
+            "Transcript not found for the meeting.");
 }

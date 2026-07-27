@@ -1,18 +1,21 @@
+# Build output
 bin/
 obj/
+
+# Visual Studio
 .vs/
 
-TestResults/
-
+# User-specific files
 *.user
 *.suo
-*.cache
-*.log
+*.userosscache
+*.sln.docstates
 
-artifacts/
+# Local environment/secrets
+.env
+.env.*
+secrets.json
 
-publish/
-
-coverage/
-
-*.nupkg
+# Local storage/uploads
+uploads/
+storage/

@@ -8,7 +8,9 @@ using MeetMindAI.Application.Common.Abstractions.AI;
 using MeetMindAI.Application.Common.Abstractions.Services;
 using MeetMindAI.Application.Common.Abstractions.Storage;
 using MeetMindAI.Application.Common.Authorization;
+using MeetMindAI.Application.Common.Interfaces.AI;
 using MeetMindAI.Domain.Enums;
+using MeetMindAI.Infrastructure.AI.Gemini;
 using MeetMindAI.Infrastructure.AI.Mock;
 using MeetMindAI.Infrastructure.Authentication;
 using MeetMindAI.Infrastructure.Services;
@@ -92,6 +94,19 @@ public static class DependencyInjection
          };
      });
 
+        services.Configure<GeminiOptions>(
+    configuration.GetSection(GeminiOptions.SectionName));
+
+        services.AddHttpClient<IActionItemExtractionService,
+            GeminiActionItemExtractionService>(client =>
+            {
+                client.BaseAddress =
+            new Uri("https://generativelanguage.googleapis.com/");
+            });
+
+ 
+
+
         services.AddSingleton<
             Microsoft.Extensions.Options.IValidateOptions<JwtOptions>,
             JwtOptionsValidator>();
@@ -107,10 +122,19 @@ public static class DependencyInjection
 
         services.AddScoped<IFileStorageService, LocalFileStorageService>();
 
-        services.AddScoped<IAiSummaryService, MockAiSummaryService>();
+        services.AddHttpClient<
+    IAiSummaryService,
+    GeminiAiSummaryService>(client =>
+    {
+        client.BaseAddress =
+            new Uri(
+                "https://generativelanguage.googleapis.com/");
+    });
 
 
 
         return services;
     }
+
+
 }

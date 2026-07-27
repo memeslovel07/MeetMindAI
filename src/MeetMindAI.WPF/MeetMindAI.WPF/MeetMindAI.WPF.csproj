@@ -6,15 +6,33 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+
+      <ApplicationIcon>Assets\MeetMindAI.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\MeetMindAI.ico" />
+    <None Remove="Views\Meetings\MeetingsView.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
       <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.10" />
+      <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.10" />
+      <PackageReference Include="xunit.extensibility.core" Version="2.9.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\MeetMindAI.Application\MeetMindAI.Application\MeetMindAI.Application.csproj" />
     <ProjectReference Include="..\..\MeetMindAI.Shared\MeetMindAI.Shared\MeetMindAI.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\Authentication\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\MeetMindAI.ico" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,201 @@
+<Window x:Class="MeetMindAI.WPF.Views.Meetings.CreateMeetingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Create Meeting"
+        Width="520"
+        Height="610"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#F8FAFC">
+
+    <Grid Margin="32">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+
+        <StackPanel>
+
+            <TextBlock Text="Create Meeting"
+                       FontSize="26"
+                       FontWeight="Bold"
+                       Foreground="#111827"/>
+
+            <TextBlock Text="Add a new meeting to your workspace."
+                       FontSize="13"
+                       Foreground="#64748B"
+                       Margin="0,7,0,0"/>
+
+        </StackPanel>
+
+        <!-- Form -->
+
+        <ScrollViewer Grid.Row="1"
+                      Margin="0,28,0,20"
+                      VerticalScrollBarVisibility="Auto">
+
+            <StackPanel>
+
+                <!-- Title -->
+
+                <TextBlock Text="Meeting title"
+                           FontWeight="SemiBold"
+                           Foreground="#334155"
+                           Margin="0,0,0,7"/>
+
+                <TextBox Text="{Binding Title,
+                                UpdateSourceTrigger=PropertyChanged}"
+                         Height="44"
+                         Padding="12,0"
+                         VerticalContentAlignment="Center"/>
+
+
+                <!-- Description -->
+
+                <TextBlock Text="Description"
+                           FontWeight="SemiBold"
+                           Foreground="#334155"
+                           Margin="0,20,0,7"/>
+
+                <TextBox Text="{Binding Description,
+                                UpdateSourceTrigger=PropertyChanged}"
+                         Height="90"
+                         Padding="12"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"
+                         VerticalScrollBarVisibility="Auto"/>
+
+
+                <!-- Date -->
+
+                <TextBlock Text="Scheduled date"
+                           FontWeight="SemiBold"
+                           Foreground="#334155"
+                           Margin="0,20,0,7"/>
+
+                <DatePicker SelectedDate="{Binding ScheduledDate}"
+                            Height="42"/>
+
+
+                <!-- Time + Duration -->
+
+                <Grid Margin="0,20,0,0">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="18"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Time -->
+
+                    <StackPanel>
+
+                        <TextBlock Text="Time"
+                                   FontWeight="SemiBold"
+                                   Foreground="#334155"
+                                   Margin="0,0,0,7"/>
+
+                        <TextBox Text="{Binding ScheduledTime,
+                                       UpdateSourceTrigger=PropertyChanged}"
+                                 Height="42"
+                                 Padding="12,0"
+                                 VerticalContentAlignment="Center"/>
+
+                        <TextBlock Text="24-hour format (HH:mm)"
+                                   FontSize="11"
+                                   Foreground="#94A3B8"
+                                   Margin="2,5,0,0"/>
+
+                    </StackPanel>
+
+
+                    <!-- Duration -->
+
+                    <StackPanel Grid.Column="2">
+
+                        <TextBlock Text="Duration (minutes)"
+                                   FontWeight="SemiBold"
+                                   Foreground="#334155"
+                                   Margin="0,0,0,7"/>
+
+                        <TextBox Text="{Binding DurationMinutes,
+                                       UpdateSourceTrigger=PropertyChanged}"
+                                 Height="42"
+                                 Padding="12,0"
+                                 VerticalContentAlignment="Center"/>
+
+                    </StackPanel>
+
+                </Grid>
+
+
+                <!-- Error -->
+
+                <Border Background="#FEF2F2"
+                        CornerRadius="8"
+                        Padding="12"
+                        Margin="0,20,0,0"
+                        Visibility="{Binding ErrorMessage,
+                            Converter={StaticResource StringToVisibilityConverter}}">
+
+                    <TextBlock Text="{Binding ErrorMessage}"
+                               Foreground="#B91C1C"
+                               TextWrapping="Wrap"/>
+
+                </Border>
+
+            </StackPanel>
+
+        </ScrollViewer>
+
+
+        <!-- Actions -->
+
+        <Grid Grid.Row="2">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="1"
+                    Content="Cancel"
+                    Command="{Binding CancelCommand}"
+                    Height="42"
+                    Padding="20,0"
+                    Margin="0,0,10,0"/>
+
+            <Button Grid.Column="2"
+                    Command="{Binding CreateCommand}"
+                    Height="42"
+                    MinWidth="130"
+                    Padding="20,0"
+                    Background="#4F46E5"
+                    Foreground="White"
+                    BorderThickness="0">
+
+                <Grid>
+
+                    <TextBlock Text="Create Meeting"
+                               Visibility="{Binding IsLoading,
+                                   Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+
+                    <TextBlock Text="Creating..."
+                               Visibility="{Binding IsLoading,
+                                   Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                </Grid>
+
+            </Button>
+
+        </Grid>
+
+    </Grid>
+
+</Window>

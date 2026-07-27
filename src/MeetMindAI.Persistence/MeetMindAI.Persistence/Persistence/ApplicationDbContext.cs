@@ -45,6 +45,8 @@ public sealed class ApplicationDbContext
 
     public DbSet<MeetingSummary> MeetingSummaries => Set<MeetingSummary>();
 
+    public DbSet<ActionItem> ActionItems => Set<ActionItem>();
+
     /// <inheritdoc />
     protected override void OnModelCreating(
         ModelBuilder modelBuilder)
