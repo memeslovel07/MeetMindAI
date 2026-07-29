@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeetMindAI.Domain.Tests", "tests\MeetMindAI.Domain.Tests\MeetMindAI.Domain.Tests.csproj", "{C0A8F66A-BF96-44A7-B02D-5423FB9E3516}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeetMindAI.Application.Tests", "tests\MeetMindAI.Application.Tests\MeetMindAI.Application.Tests.csproj", "{05699707-E968-4413-822C-3244318B8577}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -127,12 +129,25 @@ Global
 		{C0A8F66A-BF96-44A7-B02D-5423FB9E3516}.Release|x64.Build.0 = Release|Any CPU
 		{C0A8F66A-BF96-44A7-B02D-5423FB9E3516}.Release|x86.ActiveCfg = Release|Any CPU
 		{C0A8F66A-BF96-44A7-B02D-5423FB9E3516}.Release|x86.Build.0 = Release|Any CPU
+		{05699707-E968-4413-822C-3244318B8577}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05699707-E968-4413-822C-3244318B8577}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05699707-E968-4413-822C-3244318B8577}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{05699707-E968-4413-822C-3244318B8577}.Debug|x64.Build.0 = Debug|Any CPU
+		{05699707-E968-4413-822C-3244318B8577}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{05699707-E968-4413-822C-3244318B8577}.Debug|x86.Build.0 = Debug|Any CPU
+		{05699707-E968-4413-822C-3244318B8577}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05699707-E968-4413-822C-3244318B8577}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05699707-E968-4413-822C-3244318B8577}.Release|x64.ActiveCfg = Release|Any CPU
+		{05699707-E968-4413-822C-3244318B8577}.Release|x64.Build.0 = Release|Any CPU
+		{05699707-E968-4413-822C-3244318B8577}.Release|x86.ActiveCfg = Release|Any CPU
+		{05699707-E968-4413-822C-3244318B8577}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C0A8F66A-BF96-44A7-B02D-5423FB9E3516} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{05699707-E968-4413-822C-3244318B8577} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61F941F2-A6C5-4287-8137-039A46D897F2}
