@@ -31,8 +31,4 @@
     <ProjectReference Include="..\..\src\MeetMindAI.Application\MeetMindAI.Application\MeetMindAI.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ActionItems\DeleteActionItem\" />
-  </ItemGroup>
-
 </Project>
