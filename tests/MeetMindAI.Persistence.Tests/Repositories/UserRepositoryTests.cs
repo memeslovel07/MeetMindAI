@@ -164,4 +164,23 @@ public sealed class UserRepositoryTests : IDisposable
         _context.Dispose();
         _connection.Dispose();
     }
+
+    [Fact]
+    public async Task ExistsByEmailAsync_ShouldNormalizeInput()
+    {
+        // Arrange
+        var user = CreateUser(
+            "somesh@example.com");
+
+        await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
+
+        // Act
+        var result =
+            await _repository.ExistsByEmailAsync(
+                "  SoMeSh@Example.Com  ");
+
+        // Assert
+        Assert.True(result);
+    }
 }

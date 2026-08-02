@@ -7,7 +7,7 @@ using MeetMindAI.WPF.Models.Authentication;
 using MeetMindAI.WPF.Services.Authentication;
 using MeetMindAI.WPF.ViewModels.Base;
 
-using Xunit;
+
 
 namespace MeetMindAI.WPF.ViewModels.Authentication;
 
@@ -81,6 +81,12 @@ public partial class LoginViewModel : ViewModelBase
 
             // Navigation to Dashboard comes next.
         }
+
+        catch (InvalidOperationException ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+        
         catch (HttpRequestException)
         {
             ErrorMessage =

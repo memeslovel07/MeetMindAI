@@ -69,12 +69,14 @@ public sealed class MeetingsController : ControllerBase
     /// </summary>
     [HttpGet("{id:guid}")]
     [ProducesResponseType(
-        typeof(GetMeetingResponse),
-        StatusCodes.Status200OK)]
+    typeof(GetMeetingResponse),
+    StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(
-        Guid id,
-        CancellationToken cancellationToken)
+    Guid id,
+    CancellationToken cancellationToken)
     {
         var result = await _sender.Send(
             new GetMeetingQuery(id),
@@ -85,6 +87,16 @@ public sealed class MeetingsController : ControllerBase
             if (result.Error == MeetingErrors.NotFound)
             {
                 return NotFound(result.Error);
+            }
+
+            if (result.Error == Error.Forbidden)
+            {
+                return Forbid();
+            }
+
+            if (result.Error == Error.Unauthorized)
+            {
+                return Unauthorized(result.Error);
             }
 
             return BadRequest(result.Error);

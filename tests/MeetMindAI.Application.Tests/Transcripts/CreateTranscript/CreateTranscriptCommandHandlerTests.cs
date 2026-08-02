@@ -1,5 +1,7 @@
 using Xunit;
 
+using MeetMindAI.Application.Common.Abstractions.Services;
+using MeetMindAI.Shared.Results;
 using MeetMindAI.Application.Common.Abstractions.Persistence;
 using MeetMindAI.Application.Common.Interfaces.Persistence;
 using MeetMindAI.Application.Features.Transcripts.CreateTranscript;
@@ -12,6 +14,7 @@ namespace MeetMindAI.Application.Tests.Transcripts.CreateTranscript;
 
 public sealed class CreateTranscriptCommandHandlerTests
 {
+    private readonly Mock<ICurrentUserService> _currentUserServiceMock;
     private readonly Mock<ITranscriptRepository> _transcriptRepositoryMock;
     private readonly Mock<IMeetingRepository> _meetingRepositoryMock;
     private readonly Mock<IApplicationDbContext> _dbContextMock;
@@ -29,10 +32,14 @@ public sealed class CreateTranscriptCommandHandlerTests
         _dbContextMock =
             new Mock<IApplicationDbContext>();
 
+        _currentUserServiceMock =
+            new Mock<ICurrentUserService>();
+
         _handler = new CreateTranscriptCommandHandler(
             _transcriptRepositoryMock.Object,
             _meetingRepositoryMock.Object,
-            _dbContextMock.Object);
+            _dbContextMock.Object,
+            _currentUserServiceMock.Object);
     }
 
     [Fact]
@@ -104,6 +111,12 @@ public sealed class CreateTranscriptCommandHandlerTests
     public async Task Handle_WhenMeetingDoesNotExist_ShouldReturnNotFound()
     {
         // Arrange
+        var currentUserId = Guid.NewGuid();
+
+        _currentUserServiceMock
+            .Setup(x => x.UserId)
+            .Returns(currentUserId);
+
         var meetingId = Guid.NewGuid();
 
         _meetingRepositoryMock
@@ -155,8 +168,7 @@ public sealed class CreateTranscriptCommandHandlerTests
                 "English",
                 TimeSpan.FromMinutes(20));
 
-        Assert.True(
-            existingTranscriptResult.IsSuccess);
+        Assert.True(existingTranscriptResult.IsSuccess);
 
         var existingTranscript =
             existingTranscriptResult.Value;
@@ -251,17 +263,131 @@ public sealed class CreateTranscriptCommandHandlerTests
             Times.Never);
     }
 
-    private static Meeting CreateMeeting()
+    private Meeting CreateMeeting()
     {
+        var organizerId = Guid.NewGuid();
+
+        _currentUserServiceMock
+            .Setup(x => x.UserId)
+            .Returns(organizerId);
+
         var result = Meeting.Create(
             "Transcript Test Meeting",
             null,
-            Guid.NewGuid(),
+            organizerId,
             DateTime.UtcNow.AddDays(1),
             30);
 
         Assert.True(result.IsSuccess);
 
         return result.Value;
+    }
+
+    [Fact]
+    public async Task Handle_WhenUserDoesNotOwnMeeting_ShouldReturnForbidden()
+    {
+        // Arrange
+        var organizerId = Guid.NewGuid();
+        var differentUserId = Guid.NewGuid();
+
+        var meetingResult = Meeting.Create(
+            "Private Meeting",
+            null,
+            organizerId,
+            DateTime.UtcNow.AddDays(1),
+            30);
+
+        Assert.True(meetingResult.IsSuccess);
+
+        var meeting = meetingResult.Value;
+
+        _currentUserServiceMock
+            .Setup(x => x.UserId)
+            .Returns(differentUserId);
+
+        _meetingRepositoryMock
+            .Setup(x => x.GetByIdAsync(
+                meeting.Id,
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(meeting);
+
+        var command = new CreateTranscriptCommand(
+            meeting.Id,
+            "I should not be allowed to create this.",
+            "English",
+            TimeSpan.FromMinutes(30));
+
+        // Act
+        var result = await _handler.Handle(
+            command,
+            CancellationToken.None);
+
+        // Assert
+        Assert.True(result.IsFailure);
+
+        Assert.Equal(
+            Error.Forbidden,
+            result.Error);
+
+        _transcriptRepositoryMock.Verify(
+            x => x.GetByMeetingIdAsync(
+                It.IsAny<Guid>(),
+                It.IsAny<CancellationToken>()),
+            Times.Never);
+
+        _transcriptRepositoryMock.Verify(
+            x => x.AddAsync(
+                It.IsAny<Transcript>(),
+                It.IsAny<CancellationToken>()),
+            Times.Never);
+
+        _dbContextMock.Verify(
+            x => x.SaveChangesAsync(
+                It.IsAny<CancellationToken>()),
+            Times.Never);
+    }
+
+    [Fact]
+    public async Task Handle_WhenUserIsNotAuthenticated_ShouldReturnUnauthorized()
+    {
+        // Arrange
+        _currentUserServiceMock
+            .Setup(x => x.UserId)
+            .Returns((Guid?)null);
+
+        var command = new CreateTranscriptCommand(
+            Guid.NewGuid(),
+            "Transcript content.",
+            "English",
+            TimeSpan.FromMinutes(30));
+
+        // Act
+        var result = await _handler.Handle(
+            command,
+            CancellationToken.None);
+
+        // Assert
+        Assert.True(result.IsFailure);
+
+        Assert.Equal(
+            Error.Unauthorized,
+            result.Error);
+
+        _meetingRepositoryMock.Verify(
+            x => x.GetByIdAsync(
+                It.IsAny<Guid>(),
+                It.IsAny<CancellationToken>()),
+            Times.Never);
+
+        _transcriptRepositoryMock.Verify(
+            x => x.AddAsync(
+                It.IsAny<Transcript>(),
+                It.IsAny<CancellationToken>()),
+            Times.Never);
+
+        _dbContextMock.Verify(
+            x => x.SaveChangesAsync(
+                It.IsAny<CancellationToken>()),
+            Times.Never);
     }
 }

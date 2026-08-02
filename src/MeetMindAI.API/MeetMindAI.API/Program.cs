@@ -19,9 +19,6 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-builder.Services.Configure<AiOptions>(
-    builder.Configuration.GetSection(AiOptions.SectionName));
-
 builder.Services
     .AddOptions<AiOptions>()
     .Bind(builder.Configuration.GetSection(AiOptions.SectionName))
@@ -100,3 +97,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program
+{
+}

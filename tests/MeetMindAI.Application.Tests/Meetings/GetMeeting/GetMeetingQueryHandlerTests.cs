@@ -1,5 +1,7 @@
 using Xunit;
 
+using MeetMindAI.Application.Common.Abstractions.Services;
+using MeetMindAI.Shared.Results;
 using MeetMindAI.Application.Common.Abstractions.Persistence;
 using MeetMindAI.Application.Meetings.GetMeeting;
 using MeetMindAI.Domain.Entities.Meetings;
@@ -15,6 +17,8 @@ public sealed class GetMeetingQueryHandlerTests
     private readonly Mock<IMeetingRepository>
         _meetingRepositoryMock;
 
+    private readonly Mock<ICurrentUserService>
+    _currentUserServiceMock;
     private readonly GetMeetingQueryHandler _handler;
 
     public GetMeetingQueryHandlerTests()
@@ -22,8 +26,12 @@ public sealed class GetMeetingQueryHandlerTests
         _meetingRepositoryMock =
             new Mock<IMeetingRepository>();
 
+        _currentUserServiceMock =
+            new Mock<ICurrentUserService>();
+
         _handler = new GetMeetingQueryHandler(
-            _meetingRepositoryMock.Object);
+            _meetingRepositoryMock.Object,
+            _currentUserServiceMock.Object);
     }
 
     [Fact]
@@ -31,6 +39,10 @@ public sealed class GetMeetingQueryHandlerTests
     {
         // Arrange
         var organizerId = Guid.NewGuid();
+
+        _currentUserServiceMock
+    .Setup(x => x.UserId)
+    .Returns(organizerId);
 
         var scheduledAtUtc =
             DateTime.UtcNow.AddDays(2);
@@ -104,8 +116,15 @@ public sealed class GetMeetingQueryHandlerTests
     public async Task Handle_WhenMeetingDoesNotExist_ShouldReturnNotFound()
     {
         // Arrange
+        var currentUserId =
+            Guid.NewGuid();
+
         var meetingId =
             Guid.NewGuid();
+
+        _currentUserServiceMock
+            .Setup(x => x.UserId)
+            .Returns(currentUserId);
 
         _meetingRepositoryMock
             .Setup(x => x.GetByIdAsync(
@@ -131,6 +150,88 @@ public sealed class GetMeetingQueryHandlerTests
         _meetingRepositoryMock.Verify(
             x => x.GetByIdAsync(
                 meetingId,
+                It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+
+
+
+    [Fact]
+    public async Task Handle_WhenUserIsNotAuthenticated_ShouldReturnUnauthorized()
+    {
+        // Arrange
+        _currentUserServiceMock
+            .Setup(x => x.UserId)
+            .Returns((Guid?)null);
+
+        var query =
+            new GetMeetingQuery(Guid.NewGuid());
+
+        // Act
+        var result = await _handler.Handle(
+            query,
+            CancellationToken.None);
+
+        // Assert
+        Assert.True(result.IsFailure);
+
+        Assert.Equal(
+            Error.Unauthorized,
+            result.Error);
+
+        _meetingRepositoryMock.Verify(
+            x => x.GetByIdAsync(
+                It.IsAny<Guid>(),
+                It.IsAny<CancellationToken>()),
+            Times.Never);
+    }
+
+    [Fact]
+    public async Task Handle_WhenUserDoesNotOwnMeeting_ShouldReturnForbidden()
+    {
+        // Arrange
+        var organizerId = Guid.NewGuid();
+        var currentUserId = Guid.NewGuid();
+
+        var meetingResult = Meeting.Create(
+            "Private Meeting",
+            "Private meeting description.",
+            organizerId,
+            DateTime.UtcNow.AddDays(1),
+            60);
+
+        Assert.True(meetingResult.IsSuccess);
+
+        var meeting = meetingResult.Value;
+
+        _currentUserServiceMock
+            .Setup(x => x.UserId)
+            .Returns(currentUserId);
+
+        _meetingRepositoryMock
+            .Setup(x => x.GetByIdAsync(
+                meeting.Id,
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(meeting);
+
+        var query =
+            new GetMeetingQuery(meeting.Id);
+
+        // Act
+        var result = await _handler.Handle(
+            query,
+            CancellationToken.None);
+
+        // Assert
+        Assert.True(result.IsFailure);
+
+        Assert.Equal(
+            Error.Forbidden,
+            result.Error);
+
+        _meetingRepositoryMock.Verify(
+            x => x.GetByIdAsync(
+                meeting.Id,
                 It.IsAny<CancellationToken>()),
             Times.Once);
     }

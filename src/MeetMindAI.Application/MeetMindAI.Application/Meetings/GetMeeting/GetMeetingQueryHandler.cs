@@ -1,8 +1,9 @@
 using MediatR;
 
 using MeetMindAI.Application.Common.Abstractions.Persistence;
-using MeetMindAI.Shared.Results;
+using MeetMindAI.Application.Common.Abstractions.Services;
 using MeetMindAI.Domain.Errors;
+using MeetMindAI.Shared.Results;
 
 namespace MeetMindAI.Application.Meetings.GetMeeting;
 
@@ -13,27 +14,46 @@ public sealed class GetMeetingQueryHandler
     : IRequestHandler<GetMeetingQuery, Result<GetMeetingResponse>>
 {
     private readonly IMeetingRepository _meetingRepository;
+    private readonly ICurrentUserService _currentUserService;
 
     public GetMeetingQueryHandler(
-        IMeetingRepository meetingRepository)
+        IMeetingRepository meetingRepository,
+        ICurrentUserService currentUserService)
     {
         ArgumentNullException.ThrowIfNull(meetingRepository);
+        ArgumentNullException.ThrowIfNull(currentUserService);
 
         _meetingRepository = meetingRepository;
+        _currentUserService = currentUserService;
     }
 
     public async Task<Result<GetMeetingResponse>> Handle(
         GetMeetingQuery request,
         CancellationToken cancellationToken)
     {
-        var meeting = await _meetingRepository.GetByIdAsync(
-            request.MeetingId,
-            cancellationToken);
+        // Verify authenticated user.
+        if (_currentUserService.UserId is not Guid currentUserId)
+        {
+            return Result<GetMeetingResponse>.Failure(
+                Error.Unauthorized);
+        }
+
+        var meeting =
+            await _meetingRepository.GetByIdAsync(
+                request.MeetingId,
+                cancellationToken);
 
         if (meeting is null)
         {
             return Result<GetMeetingResponse>.Failure(
                 MeetingErrors.NotFound);
+        }
+
+        // Verify meeting ownership.
+        if (meeting.OrganizerId != currentUserId)
+        {
+            return Result<GetMeetingResponse>.Failure(
+                Error.Forbidden);
         }
 
         return Result<GetMeetingResponse>.Success(

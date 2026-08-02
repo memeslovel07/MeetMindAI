@@ -1,5 +1,6 @@
 using MediatR;
 
+using MeetMindAI.Application.Common.Abstractions.Services;
 using MeetMindAI.Application.Common.Abstractions.Persistence;
 using MeetMindAI.Application.Common.Interfaces.Persistence;
 using MeetMindAI.Application.Features.Transcripts.DeleteTranscript;
@@ -16,22 +17,53 @@ public sealed class DeleteTranscriptCommandHandler
 {
     private readonly ITranscriptRepository _transcriptRepository;
     private readonly IApplicationDbContext _dbContext;
+    private readonly IMeetingRepository _meetingRepository;
+    private readonly ICurrentUserService _currentUserService;
 
     public DeleteTranscriptCommandHandler(
-        ITranscriptRepository transcriptRepository,
-        IApplicationDbContext dbContext)
+    ITranscriptRepository transcriptRepository,
+    IMeetingRepository meetingRepository,
+    IApplicationDbContext dbContext,
+    ICurrentUserService currentUserService)
     {
         ArgumentNullException.ThrowIfNull(transcriptRepository);
+        ArgumentNullException.ThrowIfNull(meetingRepository);
         ArgumentNullException.ThrowIfNull(dbContext);
+        ArgumentNullException.ThrowIfNull(currentUserService);
 
         _transcriptRepository = transcriptRepository;
+        _meetingRepository = meetingRepository;
         _dbContext = dbContext;
+        _currentUserService = currentUserService;
     }
 
     public async Task<Result<DeleteTranscriptResponse>> Handle(
         DeleteTranscriptCommand request,
         CancellationToken cancellationToken)
     {
+
+        if (_currentUserService.UserId is not Guid currentUserId)
+        {
+            return Result<DeleteTranscriptResponse>.Failure(
+                Error.Unauthorized);
+        }
+
+        var meeting = await _meetingRepository.GetByIdAsync(
+            request.MeetingId,
+            cancellationToken);
+
+        if (meeting is null)
+        {
+            return Result<DeleteTranscriptResponse>.Failure(
+                MeetingErrors.NotFound);
+        }
+
+        if (meeting.OrganizerId != currentUserId)
+        {
+            return Result<DeleteTranscriptResponse>.Failure(
+                Error.Forbidden);
+        }
+
         var transcript = await _transcriptRepository.GetByMeetingIdAsync(
             request.MeetingId,
             cancellationToken);

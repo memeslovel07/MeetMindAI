@@ -1,6 +1,7 @@
 using MediatR;
 
 using MeetMindAI.Application.Common.Abstractions.Persistence;
+using MeetMindAI.Application.Common.Abstractions.Services;
 using MeetMindAI.Application.Common.Abstractions.Storage;
 using MeetMindAI.Application.Common.Interfaces.Persistence;
 using MeetMindAI.Domain.Errors;
@@ -13,6 +14,7 @@ public sealed class DeleteAttachmentCommandHandler
         DeleteAttachmentCommand,
         Result<DeleteAttachmentResponse>>
 {
+    private readonly ICurrentUserService _currentUserService;
     private readonly IMeetingRepository _meetingRepository;
     private readonly IMeetingAttachmentRepository _attachmentRepository;
     private readonly IFileStorageService _fileStorageService;
@@ -22,7 +24,8 @@ public sealed class DeleteAttachmentCommandHandler
         IMeetingRepository meetingRepository,
         IMeetingAttachmentRepository attachmentRepository,
         IFileStorageService fileStorageService,
-        IApplicationDbContext dbContext)
+        IApplicationDbContext dbContext,
+        ICurrentUserService currentUserService)
     {
         ArgumentNullException.ThrowIfNull(meetingRepository);
         ArgumentNullException.ThrowIfNull(attachmentRepository);
@@ -33,6 +36,7 @@ public sealed class DeleteAttachmentCommandHandler
         _attachmentRepository = attachmentRepository;
         _fileStorageService = fileStorageService;
         _dbContext = dbContext;
+        _currentUserService = currentUserService;
     }
 
     public async Task<Result<DeleteAttachmentResponse>> Handle(
@@ -47,6 +51,12 @@ public sealed class DeleteAttachmentCommandHandler
         {
             return Result<DeleteAttachmentResponse>.Failure(
                 MeetingErrors.NotFound);
+        }
+
+        if (_currentUserService.UserId != meeting.OrganizerId)
+        {
+            return Result<DeleteAttachmentResponse>.Failure(
+                Error.Forbidden);
         }
 
         var attachment = await _attachmentRepository.GetByIdAsync(

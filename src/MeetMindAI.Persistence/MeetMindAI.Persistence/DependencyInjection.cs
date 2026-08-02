@@ -33,7 +33,7 @@ public static class DependencyInjection
         ArgumentNullException.ThrowIfNull(configuration);
 
         var connectionString =
-            configuration.GetConnectionString("Database")
+            configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException(
                 "The database connection string 'DefaultConnection' was not found.");
 
@@ -54,11 +54,7 @@ public static class DependencyInjection
         services.AddScoped<ITranscriptRepository, TranscriptRepository>();
 
         services.AddScoped<IMeetingAttachmentRepository, MeetingAttachmentRepository>();
-
-        services.AddScoped<IMeetingRepository, MeetingRepository>();
-        services.AddScoped<ITranscriptRepository, TranscriptRepository>();
         
-
         services.AddScoped<IMeetingSummaryRepository, MeetingSummaryRepository>();
 
         services.AddScoped<IActionItemRepository, ActionItemRepository>();

@@ -24,9 +24,16 @@
                                    Foreground="#111827"/>
 
                         <TextBlock Text="Manage and review your meetings."
-                                   FontSize="14"
-                                   Foreground="#64748B"
-                                   Margin="0,8,0,0"/>
+           Margin="0,8,0,0"/>
+
+                        <TextBox
+    MaxWidth="350"
+HorizontalAlignment="Left"
+    Height="38"
+    Margin="0,16,0,0"
+    Text="{Binding SearchText,
+                   UpdateSourceTrigger=PropertyChanged}"
+    VerticalContentAlignment="Center"/>
 
                     </StackPanel>
 
@@ -71,133 +78,97 @@
 
                 <!-- Meeting Table -->
 
-                <Border Background="White"
-                        CornerRadius="12"
-                        BorderBrush="#E2E8F0"
-                        BorderThickness="1">
 
                     <StackPanel>
 
                         <!-- Table Header -->
 
-                        <Grid Background="#F8FAFC"
-                              Margin="1"
-                              Height="48">
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2.2*"/>
-                                <ColumnDefinition Width="1.3*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="100"/>
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock Text="Meeting"
-                                       Margin="20,0"
-                                       VerticalAlignment="Center"
-                                       FontWeight="SemiBold"
-                                       Foreground="#64748B"/>
-
-                            <TextBlock Grid.Column="1"
-                                       Text="Scheduled"
-                                       VerticalAlignment="Center"
-                                       FontWeight="SemiBold"
-                                       Foreground="#64748B"/>
-
-                            <TextBlock Grid.Column="2"
-                                       Text="Duration"
-                                       VerticalAlignment="Center"
-                                       FontWeight="SemiBold"
-                                       Foreground="#64748B"/>
-
-                            <TextBlock Grid.Column="3"
-                                       Text="Status"
-                                       VerticalAlignment="Center"
-                                       FontWeight="SemiBold"
-                                       Foreground="#64748B"/>
-
-                            <TextBlock Grid.Column="4"
-                                       Text="Actions"
-                                       VerticalAlignment="Center"
-                                       FontWeight="SemiBold"
-                                       Foreground="#64748B"/>
-
-                        </Grid>
+                       
 
 
                         <!-- Rows -->
 
-                        <ItemsControl ItemsSource="{Binding Meetings}">
+                      <ItemsControl   ItemsSource="{Binding FilteredMeetings}">
 
                             <ItemsControl.ItemTemplate>
 
                                 <DataTemplate>
 
-                                    <Border BorderBrush="#E2E8F0"
-                                            BorderThickness="0,1,0,0">
+                                    <Border Margin="0,0,0,12"
+            Padding="18"
+            CornerRadius="10"
+            Background="White"
+            BorderBrush="#E5E7EB"
+            BorderThickness="1">
 
-                                        <Grid MinHeight="64">
+                                        <Grid>
 
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="2.2*"/>
-                                                <ColumnDefinition Width="1.3*"/>
-                                                <ColumnDefinition Width="1*"/>
-                                                <ColumnDefinition Width="1*"/>
-                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
 
-                                            <!-- Title -->
+                                            <StackPanel>
 
-                                            <TextBlock Text="{Binding Title}"
-                                                       Margin="20,0"
-                                                       VerticalAlignment="Center"
-                                                       FontWeight="SemiBold"
-                                                       Foreground="#1E293B"
-                                                       TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock
+                    Text="{Binding Title}"
+                    FontSize="17"
+                    FontWeight="SemiBold"
+                    Foreground="#111827"/>
 
+                                                <StackPanel
+                    Orientation="Horizontal"
+                    Margin="0,12,0,0">
 
-                                            <!-- Date -->
+                                                    <TextBlock
+                        Text="📅"
+                        FontSize="14"/>
 
-                                            <TextBlock Grid.Column="1"
-           Text="{Binding ScheduledAtLocal}"
-           VerticalAlignment="Center"
-           Foreground="#64748B"/>
+                                                    <TextBlock
+                        Text="{Binding ScheduledAtLocal}"
+                        Margin="6,0,18,0"
+                        Foreground="#6B7280"/>
 
+                                                    <TextBlock
+                        Text="⏱"
+                        FontSize="14"/>
 
-                                            <!-- Duration -->
-                                            <TextBlock Grid.Column="2"
-           Text="{Binding DurationMinutes}"
-           VerticalAlignment="Center"
-           Foreground="#64748B"/>
+                                                    <TextBlock
+                        Text="{Binding DurationMinutes}"
+                        Margin="6,0,0,0"
+                        Foreground="#6B7280"/>
 
+                                                </StackPanel>
 
-                                            <!-- Status -->
+                                            </StackPanel>
 
-                                            <Border Grid.Column="3"
-                                                    Background="#EEF2FF"
-                                                    CornerRadius="12"
-                                                    Padding="10,5"
-                                                    HorizontalAlignment="Left"
-                                                    VerticalAlignment="Center">
+                                            <StackPanel
+                Grid.Column="1"
+                HorizontalAlignment="Right">
 
-                                                <TextBlock Text="{Binding Status}"
-                                                           Foreground="#4338CA"
-                                                           FontSize="12"
-                                                           FontWeight="SemiBold"/>
+                                                <Border
+                    Background="#EEF2FF"
+                    CornerRadius="14"
+                    Padding="12,4"
+                    HorizontalAlignment="Right">
 
-                                            </Border>
+                                                    <TextBlock
+                        Text="{Binding Status}"
+                        Foreground="#4338CA"
+                        FontWeight="SemiBold"/>
 
+                                                </Border>
 
-                                            <!-- Actions -->
+                                                <Button
+                    Margin="0,18,0,0"
+                    Width="90"
+                    Height="34"
+                    Content="Open"
+                    Command="{Binding DataContext.OpenMeetingCommand,
+                                      RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    CommandParameter="{Binding}"/>
 
-                                            <Button Grid.Column="4"
-        Content="Open"
-        Command="{Binding DataContext.OpenMeetingCommand,
-                  RelativeSource={RelativeSource AncestorType=UserControl}}"
-        CommandParameter="{Binding}"
-        Padding="12,6"
-        HorizontalAlignment="Left"
-        VerticalAlignment="Center"/>
+                                            </StackPanel>
 
                                         </Grid>
 
@@ -232,7 +203,7 @@
 
                     </StackPanel>
 
-                </Border>
+               
 
             </StackPanel>
 

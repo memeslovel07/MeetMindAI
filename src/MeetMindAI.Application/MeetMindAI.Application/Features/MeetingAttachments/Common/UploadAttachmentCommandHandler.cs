@@ -63,6 +63,12 @@ public sealed class UploadAttachmentCommandHandler
                 MeetingErrors.NotFound);
         }
 
+        if (meeting.OrganizerId != currentUserId)
+        {
+            return Result<MeetingAttachmentResponse>.Failure(
+                Error.Forbidden);
+        }
+
 
 
         var storedFile = await _fileStorageService.SaveFileAsync(

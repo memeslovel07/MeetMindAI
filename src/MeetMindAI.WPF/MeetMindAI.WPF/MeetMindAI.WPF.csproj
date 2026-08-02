@@ -11,8 +11,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="appsettings.json" />
     <None Remove="Assets\MeetMindAI.ico" />
     <None Remove="Views\Meetings\MeetingsView.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -34,5 +41,11 @@
   <ItemGroup>
     <Resource Include="Assets\MeetMindAI.ico" />
   </ItemGroup>
+    
+<ItemGroup>
+  <Content Include="appsettings.json">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </Content>
+</ItemGroup>
 
 </Project>

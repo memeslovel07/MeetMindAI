@@ -9,6 +9,9 @@ using MeetMindAI.WPF.Navigation;
 using MeetMindAI.WPF.Services.Meetings;
 using MeetMindAI.WPF.ViewModels.Base;
 
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Windows.Data;
 
 
 namespace MeetMindAI.WPF.ViewModels.Meetings;
@@ -19,7 +22,12 @@ public partial class MeetingsViewModel : ViewModelBase
     private readonly INavigationService _navigationService;
 
     public ObservableCollection<MeetingListItem> Meetings { get; }
-        = new();
+     = new();
+
+    public ICollectionView FilteredMeetings { get; }
+
+    [ObservableProperty]
+    private string _searchText = string.Empty;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RefreshCommand))]
@@ -38,6 +46,13 @@ public partial class MeetingsViewModel : ViewModelBase
     {
         _meetingApiService = meetingApiService;
         _navigationService = navigationService;
+
+        FilteredMeetings =
+    CollectionViewSource.GetDefaultView(Meetings);
+
+        FilteredMeetings.Filter = FilterMeeting;
+
+        Meetings.CollectionChanged += OnMeetingsChanged;
     }
 
     public async Task LoadAsync()
@@ -65,7 +80,7 @@ public partial class MeetingsViewModel : ViewModelBase
                 Meetings.Add(meeting);
             }
 
-            OnPropertyChanged(nameof(HasMeetings));
+            
         }
         catch (UnauthorizedAccessException)
         {
@@ -118,5 +133,40 @@ public partial class MeetingsViewModel : ViewModelBase
     {
         return meeting is not null &&
                !IsLoading;
+    }
+
+    partial void OnSearchTextChanged(string value)
+    {
+        FilteredMeetings.Refresh();
+    }
+
+    private bool FilterMeeting(object item)
+    {
+        if (item is not MeetingListItem meeting)
+        {
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(SearchText))
+        {
+            return true;
+        }
+
+        return meeting.Title.Contains(
+                   SearchText,
+                   StringComparison.OrdinalIgnoreCase)
+               ||
+              meeting.Status
+    .ToString()
+    .Contains(
+        SearchText,
+        StringComparison.OrdinalIgnoreCase);
+    }
+
+    private void OnMeetingsChanged(
+        object? sender,
+        NotifyCollectionChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(HasMeetings));
     }
 }

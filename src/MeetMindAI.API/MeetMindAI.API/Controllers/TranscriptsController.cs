@@ -40,6 +40,7 @@ public sealed class TranscriptsController : ControllerBase
         typeof(CreateTranscriptResponse),
         StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Create(
@@ -79,6 +80,15 @@ public sealed class TranscriptsController : ControllerBase
             {
                 return Unauthorized(result.Error);
             }
+            if (result.Error == Error.Forbidden)
+            {
+                return Forbid();
+            }
+
+            if (result.Error == Error.Unauthorized)
+            {
+                return Unauthorized(result.Error);
+            }
 
             return BadRequest(result.Error);
         }
@@ -91,11 +101,13 @@ public sealed class TranscriptsController : ControllerBase
     
 
 [HttpGet]
-[ProducesResponseType(
+    [ProducesResponseType(
     typeof(GetTranscriptResponse),
     StatusCodes.Status200OK)]
 [ProducesResponseType(StatusCodes.Status404NotFound)]
-public async Task<IActionResult> Get(
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> Get(
     Guid meetingId,
     CancellationToken cancellationToken)
 {
@@ -103,17 +115,28 @@ public async Task<IActionResult> Get(
         new GetTranscriptQuery(meetingId),
         cancellationToken);
 
-    if (result.IsFailure)
-    {
-        if (result.Error == TranscriptErrors.NotFound)
+        if (result.IsFailure)
         {
-            return NotFound(result.Error);
+            if (result.Error == MeetingErrors.NotFound ||
+                result.Error == TranscriptErrors.NotFound)
+            {
+                return NotFound(result.Error);
+            }
+
+            if (result.Error == Error.Forbidden)
+            {
+                return Forbid();
+            }
+
+            if (result.Error == Error.Unauthorized)
+            {
+                return Unauthorized(result.Error);
+            }
+
+            return BadRequest(result.Error);
         }
 
-        return BadRequest(result.Error);
-    }
-
-    return Ok(result.Value);
+        return Ok(result.Value);
 }
 
    
@@ -145,17 +168,28 @@ public async Task<IActionResult> Update(
         command,
         cancellationToken);
 
-    if (result.IsFailure)
-    {
-        if (result.Error == TranscriptErrors.NotFound)
+        if (result.IsFailure)
         {
-            return NotFound(result.Error);
+            if (result.Error == MeetingErrors.NotFound ||
+                result.Error == TranscriptErrors.NotFound)
+            {
+                return NotFound(result.Error);
+            }
+
+            if (result.Error == Error.Forbidden)
+            {
+                return Forbid();
+            }
+
+            if (result.Error == Error.Unauthorized)
+            {
+                return Unauthorized(result.Error);
+            }
+
+            return BadRequest(result.Error);
         }
 
-        return BadRequest(result.Error);
-    }
-
-    return Ok(result.Value);
+        return Ok(result.Value);
 }
 
 
@@ -172,16 +206,27 @@ public async Task<IActionResult> Delete(
         new DeleteTranscriptCommand(meetingId),
         cancellationToken);
 
-    if (result.IsFailure)
-    {
-        if (result.Error == TranscriptErrors.NotFound)
+        if (result.IsFailure)
         {
-            return NotFound(result.Error);
+            if (result.Error == MeetingErrors.NotFound ||
+                result.Error == TranscriptErrors.NotFound)
+            {
+                return NotFound(result.Error);
+            }
+
+            if (result.Error == Error.Forbidden)
+            {
+                return Forbid();
+            }
+
+            if (result.Error == Error.Unauthorized)
+            {
+                return Unauthorized(result.Error);
+            }
+
+            return BadRequest(result.Error);
         }
 
-        return BadRequest(result.Error);
-    }
-
-    return Ok(result.Value);
+        return Ok(result.Value);
 }
 }

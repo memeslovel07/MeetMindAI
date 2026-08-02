@@ -29,15 +29,15 @@ public partial class MainWindow : Window
         _shellViewModel = shellViewModel;
 
         _loginViewModel.LoginSucceeded +=
-            OnLoginSucceeded;
+            HandleLoginSucceeded;
 
         _shellViewModel.LogoutRequested +=
             OnLogoutRequested;
 
-        ShowLogin();
+        ShowLoginView();
     }
 
-    private void ShowLogin()
+    private void ShowLoginView()
     {
         _loginViewModel.Reset();
 
@@ -46,7 +46,7 @@ public partial class MainWindow : Window
         MainContent.Content = _loginView;
     }
 
-    private async void OnLoginSucceeded(
+    private async void HandleLoginSucceeded(
     object? sender,
     EventArgs e)
     {
@@ -63,7 +63,7 @@ public partial class MainWindow : Window
     object? sender,
     EventArgs e)
     {
-        ShowLogin();
+        ShowLoginView();
     }
 
 }

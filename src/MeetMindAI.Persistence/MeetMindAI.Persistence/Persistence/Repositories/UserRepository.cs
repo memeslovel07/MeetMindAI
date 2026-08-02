@@ -55,10 +55,14 @@ public sealed class UserRepository
 
     /// <inheritdoc />
     public async Task<bool> ExistsByEmailAsync(
-        string normalizedEmail,
-        CancellationToken cancellationToken = default)
+     string normalizedEmail,
+     CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(normalizedEmail);
+
+        normalizedEmail = normalizedEmail
+            .Trim()
+            .ToUpperInvariant();
 
         return await Context.Users
             .AnyAsync(

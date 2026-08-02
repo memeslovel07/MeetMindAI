@@ -27,7 +27,7 @@ public sealed class User : AggregateRoot
     /// <param name="passwordHash">The hashed password.</param>
     /// <param name="firstName">The user's first name.</param>
     /// <param name="lastName">The user's last name.</param>
-    /// <param name="role">The user's role.</param>
+   
     private User(
         string email,
         string normalizedEmail,
@@ -106,7 +106,7 @@ public sealed class User : AggregateRoot
     /// Creates a new <see cref="User"/> instance.
     /// </summary>
     /// <param name="email">The user's email address.</param>
-    /// <param name="normalizedEmail">The normalized email address.</param>
+
     /// <param name="passwordHash">The hashed password.</param>
     /// <param name="firstName">The user's first name.</param>
     /// <param name="lastName">The user's last name.</param>

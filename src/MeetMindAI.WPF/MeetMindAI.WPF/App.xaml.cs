@@ -3,6 +3,7 @@ using System.Windows;
 using MeetMindAI.WPF.Navigation;
 using MeetMindAI.WPF.Services.ActionItems;
 using MeetMindAI.WPF.Services.Authentication;
+using MeetMindAI.WPF.Services.Configuration;
 using MeetMindAI.WPF.Services.Dialogs;
 using MeetMindAI.WPF.Services.Http;
 using MeetMindAI.WPF.Services.MeetingAttachments;
@@ -23,8 +24,10 @@ using MeetMindAI.WPF.Views.Authentication;
 using MeetMindAI.WPF.Views.Meetings;
 using MeetMindAI.WPF.Views.Shared;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace MeetMindAI.WPF;
 
@@ -38,124 +41,135 @@ public partial class App :System.Windows.Application
     public App()
     {
         _host = Host.CreateDefaultBuilder()
-            .ConfigureServices((context, services) =>
-            {
-                ConfigureServices(services);
-            })
-            .Build();
+    .ConfigureAppConfiguration(config =>
+    {
+        config.AddJsonFile(
+            "appsettings.json",
+            optional: false,
+            reloadOnChange: true);
+    })
+    .ConfigureServices((context, services) =>
+    {
+        ConfigureServices(
+            services,
+            context.Configuration);
+    })
+    .Build();
     }
 
     private static void ConfigureServices(
-     IServiceCollection services)
+     IServiceCollection services,
+     IConfiguration configuration)
     {
+        // Configuration
+        services.Configure<ApiOptions>(
+            configuration.GetSection(ApiOptions.SectionName));
+
         // Windows
         services.AddSingleton<MainWindow>();
 
         // Authentication session
-        services.AddSingleton<
-            IAuthenticationSession,
-            AuthenticationSession>();
-
-        // Login API - no bearer token required
-        services.AddHttpClient<
-            IAuthenticationApiService,
-            AuthenticationApiService>(client =>
-            {
-                client.BaseAddress =
-                new Uri("https://localhost:7066/");
-            });
+        services.AddSingleton<IAuthenticationSession, AuthenticationSession>();
 
         // Authorization handler
         services.AddTransient<AuthorizationHandler>();
 
-        // Authenticated Meeting API
-        services.AddHttpClient<
-            IMeetingApiService,
-            MeetingApiService>(client =>
+        // Login API (No Bearer Token)
+        services.AddHttpClient<IAuthenticationApiService, AuthenticationApiService>(
+            (provider, client) =>
             {
-                client.BaseAddress =
-                new Uri("https://localhost:7066/");
+                var options = provider
+                    .GetRequiredService<IOptions<ApiOptions>>()
+                    .Value;
+
+                client.BaseAddress = new Uri(options.BaseUrl);
+            });
+
+        // Meeting API
+        services.AddHttpClient<IMeetingApiService, MeetingApiService>(
+            (provider, client) =>
+            {
+                var options = provider
+                    .GetRequiredService<IOptions<ApiOptions>>()
+                    .Value;
+
+                client.BaseAddress = new Uri(options.BaseUrl);
             })
-        .AddHttpMessageHandler<AuthorizationHandler>();
+            .AddHttpMessageHandler<AuthorizationHandler>();
+
+        // Transcript API
+        services.AddHttpClient<ITranscriptApiService, TranscriptApiService>(
+            (provider, client) =>
+            {
+                var options = provider
+                    .GetRequiredService<IOptions<ApiOptions>>()
+                    .Value;
+
+                client.BaseAddress = new Uri(options.BaseUrl);
+            })
+            .AddHttpMessageHandler<AuthorizationHandler>();
+
+        // Meeting Summary API
+        services.AddHttpClient<IMeetingSummaryApiService, MeetingSummaryApiService>(
+            (provider, client) =>
+            {
+                var options = provider
+                    .GetRequiredService<IOptions<ApiOptions>>()
+                    .Value;
+
+                client.BaseAddress = new Uri(options.BaseUrl);
+            })
+            .AddHttpMessageHandler<AuthorizationHandler>();
+
+        // Action Item API
+        services.AddHttpClient<IActionItemApiService, ActionItemApiService>(
+            (provider, client) =>
+            {
+                var options = provider
+                    .GetRequiredService<IOptions<ApiOptions>>()
+                    .Value;
+
+                client.BaseAddress = new Uri(options.BaseUrl);
+            })
+            .AddHttpMessageHandler<AuthorizationHandler>();
+
+        // Meeting Attachment API
+        services.AddHttpClient<IMeetingAttachmentApiService, MeetingAttachmentApiService>(
+            (provider, client) =>
+            {
+                var options = provider
+                    .GetRequiredService<IOptions<ApiOptions>>()
+                    .Value;
+
+                client.BaseAddress = new Uri(options.BaseUrl);
+            })
+            .AddHttpMessageHandler<AuthorizationHandler>();
+
+        // Navigation
+        services.AddSingleton<INavigationService, NavigationService>();
 
         // ViewModels
         services.AddTransient<LoginViewModel>();
         services.AddSingleton<DashboardViewModel>();
         services.AddSingleton<ShellViewModel>();
+        services.AddSingleton<MeetingsViewModel>();
+        services.AddTransient<CreateMeetingViewModel>();
+        services.AddTransient<MeetingDetailsViewModel>();
+        services.AddTransient<TranscriptViewModel>();
+        services.AddTransient<MeetingSummaryViewModel>();
+        services.AddTransient<ActionItemsViewModel>();
+        services.AddTransient<ActionItemEditorViewModel>();
+        services.AddTransient<MeetingAttachmentsViewModel>();
 
         // Views
         services.AddTransient<LoginView>();
         services.AddSingleton<ShellView>();
-
-        services.AddSingleton<
-    INavigationService,
-    NavigationService>();
-
-        services.AddSingleton<MeetingsViewModel>();
-
-        services.AddTransient<CreateMeetingViewModel>();
-
         services.AddTransient<CreateMeetingWindow>();
 
-        services.AddTransient<MeetingDetailsViewModel>();
+        // Dialog Services
+        services.AddSingleton<IActionItemDialogService, ActionItemDialogService>();
+        services.AddSingleton<IAttachmentDialogService, AttachmentDialogService>();
 
-        services.AddHttpClient<
-    ITranscriptApiService,
-    TranscriptApiService>(client =>
-    {
-        client.BaseAddress =
-            new Uri("https://localhost:7066/");
-    })
-.AddHttpMessageHandler<AuthorizationHandler>();
-
-        services.AddTransient<TranscriptViewModel>();
-
-        services.AddHttpClient<
-    IMeetingSummaryApiService,
-    MeetingSummaryApiService>(client =>
-    {
-        client.BaseAddress =
-            new Uri("https://localhost:7066/");
-    })
-.AddHttpMessageHandler<AuthorizationHandler>();
-
-
-        services.AddTransient<MeetingSummaryViewModel>();
-
-        services.AddHttpClient<
-    IActionItemApiService,
-    ActionItemApiService>(client =>
-    {
-        client.BaseAddress =
-            new Uri("https://localhost:7066/");
-    })
-.AddHttpMessageHandler<AuthorizationHandler>();
-
-        services.AddTransient<ActionItemsViewModel>();
-
-        services.AddTransient<ActionItemEditorViewModel>();
-   
-
-        // Action Item dialogs
-        services.AddSingleton<
-            IActionItemDialogService,
-            ActionItemDialogService>();
-
-        services.AddHttpClient<
-    IMeetingAttachmentApiService,
-    MeetingAttachmentApiService>(client =>
-    {
-        client.BaseAddress =
-            new Uri("https://localhost:7066/");
-    })
-.AddHttpMessageHandler<AuthorizationHandler>();
-
-        services.AddSingleton<
-    IAttachmentDialogService,
-    AttachmentDialogService>();
-
-        services.AddTransient<
-    MeetingAttachmentsViewModel>();
     }
 
     protected override async void OnStartup(
